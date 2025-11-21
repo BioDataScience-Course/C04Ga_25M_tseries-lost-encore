@@ -42,6 +42,31 @@ SciViews::R("ts")
 
 <!--% Ajoutez le nombre de chunks que vous souhaitez. Répartissez-vous le travail correctement. Structurez la section en partie avec des titres explicites de niveau trois.-->
 
+```{r Importation mobility wallonia rds}
+read("./data/mobility_wallonia.rds") -> mob_wal
+```
+
+```{r Exploration des données}
+plot(mob_wal)
+summary(mob_wal)
+skimr::skim(mob_wal)
+```
+
+```{r Convesion en objet ts}
+mob_wal_ts <- ts(mob_wal, start = c(2020, 46), end = c(2022, 288), frequency = 365)
+class(mob_wal_ts)
+```
+
+```{r}
+
+read("data/mobility_wallonia.rds") -> mob
+mobw <- mob
+mobw$weekdays <- weekdays(as.POSIXct(mobw$date))
+mobw[mobw$weekdays == "Saturday" | mobw$weekdays == "Sunday", 2:7] <- NA
+mobw_ts <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+mobw_ts2 <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+```
+
 ## Conclusion
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
