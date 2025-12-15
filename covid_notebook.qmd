@@ -115,6 +115,28 @@ plot(mobWE_residence_ts)
 acf(mobw_residence_ts)
 acf(mobWE_residence_ts)
 ```
+```{r}
+mobw_mm_residence <- tsd(mobw_residence_ts, method = "average", order = 5, times = 3)
+plot(mobw_mm_residence)
+
+mobWE_mm_residence <- tsd(mobWE_residence_ts, method = "average", order = 5, times = 3)
+plot(mobWE_mm_residence)
+```
+
+```{r}
+mobwts_transport <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+aggregate(mobwts_transport, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobw_transport_ts
+plot(mobw_transport_ts)
+
+mobWEts_transport <- ts(mobWE$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+aggregate(mobWEts_transport, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobWE_transport_ts
+plot(mobWE_transport_ts)
+
+
+mobts_transport <- ts(mob$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+aggregate(mobts_transport, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_transport_ts
+plot(mob_transport_ts)
+```
 
 ## Conclusion
 
