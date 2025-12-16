@@ -60,15 +60,16 @@ mobWE_ts2 <- aggregate(mobWE_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 ```
 
 ```{r LOISIR}
+#Semaine sans week-end
 mobwts_LOISIR <- ts(mobw$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobwts_LOISIR, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobw_loisirs_ts
 plot(mobw_loisirs_ts)
-
+#Week-end
 mobWEts_LOISIR <- ts(mobWE$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobWEts_LOISIR, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobWE_loisirs_ts
 plot(mobWE_loisirs_ts)
 
-
+#semaine compléte
 mobts_LOISIR <- ts(mob$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobts_LOISIR, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_loisirs_ts
 plot(mob_loisirs_ts)
@@ -79,11 +80,49 @@ plot(mob_loisirs_ts)
 ```{r Autocorrélation LOISIR}
 acf(mobw_loisirs_ts)
 acf(mobWE_loisirs_ts)
+acf(mob_loisirs_ts)
 ```
 
 ```{r}
 mobw_mm_loisir <- tsd(mobw_loisirs_ts, method = "average", order = 5, times = 3)
 plot(mobw_mm_loisir)
+mobWE_mm_loisir <- tsd(mobWE_loisirs_ts, method = "average", order = 5, times = 3)
+plot(mobWE_mm_loisir)
+mob_mm_loisir <- tsd(mob_loisirs_ts, method = "average", order = 5, times = 3)
+plot(mob_mm_loisir)
+```
+
+```{r loisir}
+mob_mts <- tseries(mob_mm_loisir)   #semaine
+acf(mob_mts[, "filtered"])
+acf(mob_mts[, "residuals"])
+
+mobWE_mts <- tseries(mobWE_mm_loisir)   #WE
+acf(mobWE_mts[, "filtered"])
+acf(mobWE_mts[, "residuals"])
+
+mobw_mts <- tseries(mobw_mm_loisir)   # semaine sans WE
+acf(mobw_mts[, "filtered"])
+acf(mobw_mts[, "residuals"])
+```
+
+```{r loisir stat slide}
+
+loisir_loess <- stat.slide( mob_loisirs_ts, method   = "loess", s.window = 53,trend    = TRUE, robust   = TRUE )
+plot(loisir_loess)
+
+loisir_loess_WE <- stat.slide( mobWE_loisirs_ts, method   = "loess", s.window = 53,trend    = TRUE, robust   = TRUE )
+plot(loisir_loess_WE)
+
+loisir_loess_w <- stat.slide( mobw_loisirs_ts, method   = "loess", s.window = 53,trend    = TRUE, robust   = TRUE )
+plot(loisir_loess_w)
+
+```
+
+```{r loisir spectrum }
+spectrum(mob_mts,spans = c(5, 3))->spect_loisir
+spectrum(mobw_mts,spans = c(5, 3))-> spect_loisir_w
+spectrum(mobWE_mts,spans = c(5, 3))->spect_loisir_WE
 ```
 
 ```{r TRAVAIL}
