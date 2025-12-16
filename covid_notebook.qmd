@@ -100,8 +100,35 @@ plot(mobWE_travail_ts)
 acf(mobw_travail_ts)
 acf(mobWE_travail_ts)
 ```
+```{r visualisation données résidence brutes}
+mob_ts_residence_brute <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+plot(mob_ts_residence_brute,
+     main = "Résidence – semaines entières",
+     xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour semaine complètes
+
+mobw_ts_residence_brute <- ts(mobw$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+plot(mobw_ts_residence_brute,
+     main = "Résidence – jours ouvrables",
+     xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour jours ouvrables
+
+mobWE_ts_residence_brute <- ts(mobWE$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+plot(mobWE_ts_residence_brute,
+     main = "Résidence – week-ends",
+     xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour week-ends
+
+#Comparaison jours ouvrables et semaines 
+plot(mobw_ts_residence_brute, main = "Résidence – comparaison jours ouvrables / week-end)", xlab = "Temps", ylab = "% vs référence", lwd = 2)
+lines(mobWE_ts_residence_brute, lwd = 2, lty = 2)
+legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
+
+```
+
 
 ```{r RESIDENCE}
+mobts_residence <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+aggregate(mobts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_residence_ts
+plot(mob_residence_ts)
+
 mobwts_residence <- ts(mobw$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobwts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobw_residence_ts
 plot(mobw_residence_ts)
@@ -109,11 +136,30 @@ plot(mobw_residence_ts)
 mobWEts_residence <- ts(mobWE$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobWEts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobWE_residence_ts
 plot(mobWE_residence_ts)
+
+plot(mobwts_residence, main = "Résidence – comparaison jours ouvrables / week-end (hebdomadaire)", xlab = "Temps", ylab = "Variation (%) vs référence", lwd = 2)
+lines(mobWEts_residence, lwd = 2, lty = 2)
+legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 ```
 
 ```{r Autocorrélation RESIDENCE}
-acf(mobw_residence_ts)
-acf(mobWE_residence_ts)
+acf(mobw_residence_ts, main = "ACF – Résidence (jours ouvrables, hebdo)")
+acf(mobWE_residence_ts, main = "ACF – Résidence (week-ends, hebdo)")
+acf(mob_residence_ts, main = "ACF – Résidence (semaines complètes, hebdo)")
+
+set.seed(123)
+tt_residence_w <- trend.test(mobw_residence_ts, R = 999)
+tt_residence_w
+plot(tt_residence_w)
+
+lt_residence_w <- local.trend(mobw_residence_ts, main="Test de tendance locale - résidence - jours ouvrables")
+
+
+tt_residence_WE <- trend.test(mobWE_residence_ts, R = 999)
+tt_residence_WE
+plot(tt_residence_WE)
+
+lt_residence_WE <- local.trend(mobWE_residence_ts, main="Test de tendance locale - résidence - week-ends")
 ```
 
 ```{r}
@@ -122,6 +168,17 @@ plot(mobw_mm_residence)
 
 mobWE_mm_residence <- tsd(mobWE_residence_ts, method = "average", order = 5, times = 3)
 plot(mobWE_mm_residence)
+
+residencew_filtered <- extract(mobw_mm_residence, components = "filtered")
+plot(residencew_filtered,
+     main = "Résidence – composante filtrée (moyenne mobile)",
+     xlab = "Temps", ylab = "Variation (%) vs référence")
+
+
+residencew_filtered <- extract(mobw_mm_residence, components = "filtered")
+
+acf(residencew_filtered, main = "ACF de la composante filtrée – Résidence (jours ouvrables)")
+
 ```
 
 ```{r}
@@ -145,6 +202,7 @@ acf(mobWE_transport_ts)
 ```
 
 ## Conclusion
+
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
 
