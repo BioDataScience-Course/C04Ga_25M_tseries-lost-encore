@@ -8,6 +8,7 @@ format:
     toc: true
 editor: visual
 lang: fr
+---410
 ---
 
 <!--# Ceci est un commentaire. -->
@@ -59,9 +60,8 @@ mobWE_ts <- ts(mobWE$retail_and_recreation_percent_change_from_baseline, start =
 mobWE_ts2 <- aggregate(mobWE_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 ```
 
+#Présentation du jeux de données ##Mobilité lié aux Commerces et aux loisirs
 
-#Présentation du jeux de données 
-##Mobilité lié aux Commerces et aux loisirs 
 ```{r loisir et commerce présentation des données}
 # Série brut, semaine
 mob_loisir_brut <- ts( mob$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
@@ -81,13 +81,11 @@ lines(mobWE_loisir_brut, lwd = 2, lty = 2)
 legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 
 ```
+
 La mobilité liée aux commerces et aux loisirs montre une chute marquée au début de l’année 2020, particulièrement prononcée durant les week-ends. La reprise est progressive à partir de mi-2021, avec une variabilité plus importante observée pour les jours de week-end que pour les jours de semaine.
 
-Et quand on supperpose l’évolution de la mobilité liée aux commerces et aux loisirs en Wallonie entre 2020 et 2022, en distinguant les jours ouvrables et les week-ends.
-On observe une chute brutale de la mobilité au début de l’année 2020, plus marquée durant les week-ends que durant les jours ouvrables. La reprise est progressive mi-2021, avec des valeurs qui restent globalement négatives pendant une longue période. Puis elle se stabilise et devient majoritairement positive, surtout les week-ends, qui présentent une variabilité plus importante que les jours de semaine.
-#Analyse : 
-##Loisir et commerces
-###Préparation des données 
+Et quand on supperpose l’évolution de la mobilité liée aux commerces et aux loisirs en Wallonie entre 2020 et 2022, en distinguant les jours ouvrables et les week-ends. On observe une chute brutale de la mobilité au début de l’année 2020, plus marquée durant les week-ends que durant les jours ouvrables. La reprise est progressive mi-2021, avec des valeurs qui restent globalement négatives pendant une longue période. Puis elle se stabilise et devient majoritairement positive, surtout les week-ends, qui présentent une variabilité plus importante que les jours de semaine. #Analyse : ##Loisir et commerces ###Préparation des données
+
 ```{r LOISIR Hebdomadaire }
 #Jours ouvrables
 mobwts_LOISIR <- ts(mobw$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
@@ -132,7 +130,6 @@ local.trend(mobWE_loisirs_ts, main = "Tendance locale – LOISIR (week-end)")->l
 local.trend(mob_loisirs_ts, main = "Tendance locale – LOISIR (hebdomadaire)")->local.trend_loisir
 ```
 
-
 ```{r décomposition}
 mobw_mm_loisir <- tsd(mobw_loisirs_ts, method = "average", order = 5, times = 3)
 plot(mobw_mm_loisir)
@@ -153,6 +150,7 @@ plot(loisir_loess_w, main = "Décomposition LOESS – LOISIR (jours ouvrables)")
 loisir_loess_WE <- tsd(mobWE_loisirs_ts, method   = "loess", s.window = 53, trend    = TRUE, robust   = TRUE)
 plot(loisir_loess_WE, main = "Décomposition LOESS – LOISIR (Week-end)")
 ```
+
 ```{r extraction des résidus }
 mts_loisir <- tseries(loisir_loess)
 plot(mts_loisir)
@@ -199,6 +197,7 @@ plot(mobWE_travail_ts)
 acf(mobw_travail_ts)
 acf(mobWE_travail_ts)
 ```
+
 ```{r visualisation données résidence brutes}
 mob_ts_residence_brute <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 plot(mob_ts_residence_brute,
@@ -221,7 +220,6 @@ lines(mobWE_ts_residence_brute, lwd = 2, lty = 2)
 legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 
 ```
-
 
 ```{r RESIDENCE}
 mobts_residence <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
@@ -280,28 +278,112 @@ acf(residencew_filtered, main = "ACF de la composante filtrée – Résidence (j
 
 ```
 
-```{r}
-mobwts_transport <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
-aggregate(mobwts_transport, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobw_transport_ts
-plot(mobw_transport_ts)
+```{r TRANSPORT - Presentation de données sur les arrets de transport en époque de Covid}
+mob_ts_transport_brut <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
+mob_ts_transport<-aggregate(mob_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
+plot(mob_ts_transport, main="Arrets de transport par semaine",xlab="Temps", ylab="Pourcentage de changement par rapport à la référence") #pour la semaine complète 
 
-mobWEts_transport <- ts(mobWE$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
-aggregate(mobWEts_transport, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobWE_transport_ts
-plot(mobWE_transport_ts)
+mobDS_ts_transport_brut <- ts(mobWE$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
+mobDS_ts_transport<-aggregate(mobDS_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
+plot(mobDS_ts_transport, main = "Arrêts de transport en Début de Semaine", xlab = "Temps", ylab = "Pourcentage de changement par rapport à la référence")#pour le début de semaine de lundi à vendredi 
 
+mobFS_ts_transport_brut <- ts(mob$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
+mobFS_ts_transport<-aggregate(mobFS_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
+plot(mobFS_ts_transport, main = "Arrêts de transport en Fin de Semaine", xlab = "Temps", ylab = "Pourcentage de changement par rapport à la référence")#pour la fin de la semaine pendant le samedi et le dimanche 
 
-mobts_transport <- ts(mob$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
-aggregate(mobts_transport, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_transport_ts
-plot(mob_transport_ts)
+plot(mob_ts_transport_brut, main = "Comparaison entre le Début de semaine et la Fin de la semaine", xlab = "Temps", ylab = "Pourcentage contre baseline", lwd = 2) 
+lines(mob_ts_transport_brut, lwd = 2, lty = 0.5) 
+legend("topright", legend = c("Début Semaine", "Fin Semaine"), lty = c(1,2), lwd = 0.5, bty = "n")#Superposition de début de semaine et fin de semaine  
 ```
 
+On peut voir qu'au début du 2020 il y a une forte diminution, mais très peu après il y a une grande augmentation successive. En 2021, il y à nouveau une chute mais beaucoup moins drastique qu'avant (1/2 par rapport à l'année dernière). Ensuite, on voit une récupération encore plus forte qu'avant. Cependant, en 2022 il y a encore une autre chute de même intensité or qui dure beaucoup moins longtemps. Cette fois ci on perçoit une récupération complète de quasi 60% qui est maintenu dans le temps.
+
 ```{r Autocorrélation TRANSPORT}
-acf(mobw_transport_ts)
-acf(mobWE_transport_ts)
+acf(mob_ts_transport, main = "ACF – TRANSPORT (tos les jours de la semaine, hebdomadaire)") 
+acf(mobDS_ts_transport,main = "ACF – TRANSPORT (Début semaine, hebdomadaire)") 
+acf(mobFS_ts_transport,main = "ACF – TRANSPORT (Fin Semaine, hebdomadaire)")  
+
+
+```
+
+```{r tendance locale et générale dans les arrêts de transport}
+trend.test(mob_ts_transport, R=999)->trend.test_S_transport 
+plot(trend.test_S_transport) 
+trend.test_S_transport 
+
+trend.test(mobDS_ts_transport, R=999)->trend.test_DS_transport
+plot(trend.test_DS_transport) 
+trend.test_DS_transport 
+
+trend.test(mobFS_ts_transport,R=999)->trend.test_FS_transport 
+plot(trend.test_FS_transport) 
+trend.test_FS_transport 
+
+local.trend(mob_ts_transport, main = "Tendance locale – TRANSPORT (jours ouvrables)")->local.trend_transport 
+local.trend(mobDS_ts_transport, main = "Tendance locale – TRANSPORT (week-end)")->local.trend_DS_transport 
+local.trend(mobFS_ts_transport, main = "Tendance locale – TRANSPORT (hebdomadaire)")->local.trend_FS_transport  
+
+```
+
+```{r décomposition de données de arrêts de Transport}
+mob_mm_transport <- tsd(mob_ts_transport, method = "average", order = 5, times = 3) 
+plot(mob_mm_transport) 
+
+mobDS_mm_transport <- tsd(mobDS_ts_transport, method = "average", order = 5, times = 3) 
+plot(mobDS_mm_transport) 
+
+mobFS_mm_transport <- tsd(mobFS_ts_transport, method = "average", order = 5, times = 3) 
+plot(mobFS_mm_transport)  
+
+
+```
+
+```{r decomposition en LOESS des arrêts de transport}
+transport_loess <- tsd(mob_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
+plot(transport_loess, main = "Décomposition LOESS de TRANSPORT (semaine complète)") 
+
+transportDS_loess <- tsd(mobDS_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
+plot(transportDS_loess, main = "Décomposition LOESS de TRANSPORT (Debut de semaine: de lundi à vendredi)") 
+
+transportFS_loess <- tsd(mobFS_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
+plot(transportFS_loess, main = "Décomposition LOESS de TRANSPORT (Fin de semaine: samedi et dimanche)")  
+
+```
+
+```{r extraction des résidus de Transport }
+mts_transport <- tseries(transport_loess) 
+plot(mts_loisir) 
+
+mts_transportDS <- tseries(transportDS_loess) 
+plot(mts_transportDS) 
+
+mts_transportFS <- tseries(transportFS_loess) 
+plot(mts_transportFS)  
+
+```
+
+```{r}
+acf(mts_transport[, "trend"]) 
+acf(mts_transportDS[, "trend"]) 
+acf(mts_transportFS[, "trend"])  
+
+```
+
+```{r}
+spectrum(mts_transport[, "trend"], spans = c(5,7)) 
+spectrum(mts_transportDS[, "trend"], spans = c(5,7)) 
+spectrum(mts_transportFS[, "trend"], spans = c(5,7))  
+
+
+```
+
+```{r}
+acf(mts_transport[, "residuals"]) 
+acf(mts_transportDS[, "residuals"]) 
+acf(mts_transportFS[, "residuals"])  
 ```
 
 ## Conclusion
-
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
 
