@@ -199,69 +199,88 @@ plot(mobWE_travail_ts)
 acf(mobw_travail_ts)
 acf(mobWE_travail_ts)
 ```
+## Résidence
+### Visualisation des données brutes 
 ```{r visualisation données résidence brutes}
 mob_ts_residence_brute <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
-plot(mob_ts_residence_brute,
-     main = "Résidence – semaines entières",
-     xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour semaine complètes
+plot(mob_ts_residence_brute, main = "Résidence – semaines entières", xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour semaine complètes
 
 mobw_ts_residence_brute <- ts(mobw$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
-plot(mobw_ts_residence_brute,
-     main = "Résidence – jours ouvrables",
-     xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour jours ouvrables
+plot(mobw_ts_residence_brute, main = "Résidence – jours ouvrables", xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour jours ouvrables
 
 mobWE_ts_residence_brute <- ts(mobWE$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
-plot(mobWE_ts_residence_brute,
-     main = "Résidence – week-ends",
-     xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour week-ends
+plot(mobWE_ts_residence_brute, main = "Résidence – week-ends", xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour week-ends
 
 #Comparaison jours ouvrables et semaines 
-plot(mobw_ts_residence_brute, main = "Résidence – comparaison jours ouvrables / week-end)", xlab = "Temps", ylab = "% vs référence", lwd = 2)
+plot(mobw_ts_residence_brute, main = "Résidence – comparaison jours ouvrables / week-end", xlab = "Temps", ylab = "% vs référence", lwd = 2)
 lines(mobWE_ts_residence_brute, lwd = 2, lty = 2)
 legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 
+plot(mob$date, mob$residential_percent_change_from_baseline, type = "l", main = "Résidence – série temporelle avec séparation par années", ylab = "Variation (%) par rapport à la référence", xlab = "Date")
+abline(v = as.Date(c("2021-01-01", "2022-01-01")), col = "blue", lty = 2) # Lignes verticales aux changements d'année
 ```
+La variable Résidence représente la variation (en %) du temps passé à domicile par rapport à une période de référence. La série temporelle reprenant la semaine entière montre une hausse très marquée au début de l’année 2020, correspondant au premier confinement, avec des valeurs dépassant +30 %. 
+Par la suite, la série présente une diminution progressive, ponctuée de fluctuations, traduisant l’alternance des mesures sanitaires en 2020 et 2021. À partir de 2022, les variations deviennent plus faibles et se rapprochent de la référence (0%).
+La distinction entre jours ouvrables et week-ends met en évidence des comportements différents. Les jours ouvrables montrent des augmentations plus importantes et plus persistantes, probablement liées au télétravail, tandis que les week-ends montrent des variations plus modérées et un retour plus rapide vers les niveaux de référence.
 
-
-```{r RESIDENCE}
+### Préparation des données
+```{r objet ts résidence}
 mobts_residence <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_residence_ts
-plot(mob_residence_ts)
+plot(mob_residence_ts) #objet ts reprenant la semaine entière
 
 mobwts_residence <- ts(mobw$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobwts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobw_residence_ts
-plot(mobw_residence_ts)
+plot(mobw_residence_ts) #objet ts reprenant les jours ouvrables
 
 mobWEts_residence <- ts(mobWE$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobWEts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobWE_residence_ts
-plot(mobWE_residence_ts)
+plot(mobWE_residence_ts) #objet ts reprenant les week-ends
 
-plot(mobwts_residence, main = "Résidence – comparaison jours ouvrables / week-end (hebdomadaire)", xlab = "Temps", ylab = "Variation (%) vs référence", lwd = 2)
-lines(mobWEts_residence, lwd = 2, lty = 2)
+plot(mobw_residence_ts, main = "Résidence – comparaison jours ouvrables / week-end", xlab = "Temps", ylab = "Variation (%) vs référence", lwd = 2)
+lines(mobWE_residence_ts, lwd = 2, lty = 2)
 legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 ```
+Les données de la variable résidence ont été converties en objets de type ts afin de permettre l’application des méthodes d’analyse des séries temporelles. Les séries sont définies à une fréquence journalière (frequency = 365) avec un point de départ fixé au 46ᵉ jour de l’année 2020.
+Trois séries ont été construites : une série incluant l’ensemble des jours, une série limitée aux jours ouvrables et une série limitée aux week-ends. 
 
-```{r Autocorrélation RESIDENCE}
-acf(mobw_residence_ts, main = "ACF – Résidence (jours ouvrables, hebdo)")
-acf(mobWE_residence_ts, main = "ACF – Résidence (week-ends, hebdo)")
-acf(mob_residence_ts, main = "ACF – Résidence (semaines complètes, hebdo)")
+### Dépendance temporelle et autocorrélation
+```{r Autocorrélation résidence}
+acf(mob_residence_ts, main = "ACF – Résidence (semaines complètes)")
+acf(mobw_residence_ts, main = "ACF – Résidence (jours ouvrables)")
+acf(mobWE_residence_ts, main = "ACF – Résidence (week-ends)")
+```
+L’ACF calculée sur les semaines complètes confirme ces observations, avec une autocorrélation significative sur plusieurs retards, reflétant la dynamique globale de la variable Résidence.
+Pour les jours ouvrables, l’ACF montre des valeurs élevées aux petits retards, suivies d’une décroissance progressive. Cette structure indique une forte dépendance temporelle et suggère la présence d’une composante de long terme dans la série.
+La série correspondant aux week-ends présente un comportement similaire, avec une autocorrélation initiale élevée et une décroissance plus lente, traduisant également une persistance temporelle marquée.
+Dans l’ensemble, ces résultats indiquent que les observations successives ne sont pas indépendantes et que les séries ne peuvent être considérées comme stationnaires, ce qui justifie l’analyse des tendances et la décomposition des séries temporelles dans la suite du travail.
 
+### Analyses des tendances
+```{r tendance générale et locale résidence}
 set.seed(123)
+tt_residence <- trend.test(mob_residence_ts, R = 999)
+tt_residence
+plot(tt_residence)
+lt_residence <- local.trend(mob_residence_ts, main="Test de tendance locale - résidence - semaines entières")
+
 tt_residence_w <- trend.test(mobw_residence_ts, R = 999)
 tt_residence_w
 plot(tt_residence_w)
-
 lt_residence_w <- local.trend(mobw_residence_ts, main="Test de tendance locale - résidence - jours ouvrables")
-
 
 tt_residence_WE <- trend.test(mobWE_residence_ts, R = 999)
 tt_residence_WE
 plot(tt_residence_WE)
-
 lt_residence_WE <- local.trend(mobWE_residence_ts, main="Test de tendance locale - résidence - week-ends")
 ```
+Le test de tendance globale, appliqué aux 3 séries indique que l’hypothèse d’absence de tendance peut être rejetée. L’évolution observée ne peut donc pas être attribuée uniquement à des fluctuations aléatoires, ce qui confirme la présence d’une composante de long terme dans la série. Pour les semaines complètes et les jours ouvrables, une augmentation marquée est observée au début de l’année 2020, suivie d’un maintien à des niveaux élevés au cours de l’année 2021, puis d’une diminution progressive à partir de 2021–2022. 
+La série correspondant aux week-ends présente une évolution similaire, mais avec des amplitudes plus faibles, suggérant un impact moins durable sur les comportements résidentiels durant ces périodes.
 
-```{r}
+### Décomposition de la série temporelle et extraction 
+```{r décomposition résidence}
+mob_mm_residence <- tsd(mob_residence_ts, method = "average", order = 5, times = 3)
+plot(mob_mm_residence)
+
 mobw_mm_residence <- tsd(mobw_residence_ts, method = "average", order = 5, times = 3)
 plot(mobw_mm_residence)
 
@@ -279,6 +298,14 @@ residencew_filtered <- extract(mobw_mm_residence, components = "filtered")
 acf(residencew_filtered, main = "ACF de la composante filtrée – Résidence (jours ouvrables)")
 
 ```
+La décomposition de la série temporelle de la variable Résidence a été réalisée afin d’isoler la dynamique de long terme et de séparer cette composante des fluctuations de court terme. Pour les semaines complètes, les jours ouvrables et les week-ends, les résultats montrent une dynamique globalement similaire : la série observée présente une hausse marquée au début de la période, suivie d’une décroissance progressive, ponctuée de quelques reprises intermédiaires.
+
+La composante filtrée, extraite par moyenne mobile, met clairement en évidence cette évolution de fond en réduisant la variabilité de court terme, ce qui facilite la lecture de la tendance générale et la comparaison entre périodes. Les résidus sont globalement centrés autour de zéro, mais présentent des valeurs extrêmes plus importantes au début de la période ainsi que lors de certains épisodes ponctuels, traduisant des variations temporaires non expliquées par la tendance lissée.
+
+La séparation selon le type de jour confirme que la dynamique de long terme est commune aux trois séries, tout en suggérant des amplitudes plus marquées pour les jours ouvrables et plus modérées pour les week-ends.
+
+
+
 
 ```{r}
 mobwts_transport <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
