@@ -59,8 +59,37 @@ mobWE_ts <- ts(mobWE$retail_and_recreation_percent_change_from_baseline, start =
 mobWE_ts2 <- aggregate(mobWE_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 ```
 
-```{r LOISIR}
-#Semaine sans week-end
+
+#Présentation du jeux de données 
+##Mobilité lié aux Commerces et aux loisirs 
+```{r loisir et commerce présentation des données}
+# Série brut, semaine
+mob_loisir_brut <- ts( mob$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+plot( mob_loisir_brut, main = "Commerces et loisirs - Semaine",  ylab = "% de changement par rapport à la référence", xlab = "Temps")
+
+#Jours ouvrables
+mobw_loisir_brut <- ts(mobw$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+plot(mobw_loisir_brut, main = "Commerces et loisirs - Jours ouvrables",ylab = "% de changement par rapport à la référence", xlab = "Temps")
+
+#WE
+mobWE_loisir_brut  <- ts(mobWE$retail_and_recreation_percent_change_from_baseline,   start = c(2020, 46), frequency = 365)
+plot(mobWE_loisir_brut, main = "Commerces et loisirs - week-end uniquement", ylab = "% de changement par rapport à la référence", xlab = "Temps")
+
+#Jours ouvrable et WE supperposé 
+plot(mobw_loisir_brut, main = "Commerces et loisirs  – comparaison jours ouvrables / week-end ", xlab = "Temps", ylab = "% vs baseline", lwd = 2)
+lines(mobWE_loisir_brut, lwd = 2, lty = 2)
+legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
+
+```
+La mobilité liée aux commerces et aux loisirs montre une chute marquée au début de l’année 2020, particulièrement prononcée durant les week-ends. La reprise est progressive à partir de mi-2021, avec une variabilité plus importante observée pour les jours de week-end que pour les jours de semaine.
+
+Et quand on supperpose l’évolution de la mobilité liée aux commerces et aux loisirs en Wallonie entre 2020 et 2022, en distinguant les jours ouvrables et les week-ends.
+On observe une chute brutale de la mobilité au début de l’année 2020, plus marquée durant les week-ends que durant les jours ouvrables. La reprise est progressive mi-2021, avec des valeurs qui restent globalement négatives pendant une longue période. Puis elle se stabilise et devient majoritairement positive, surtout les week-ends, qui présentent une variabilité plus importante que les jours de semaine.
+#Analyse : 
+##Loisir et commerces
+###Préparation des données 
+```{r LOISIR Hebdomadaire }
+#Jours ouvrables
 mobwts_LOISIR <- ts(mobw$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobwts_LOISIR, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobw_loisirs_ts
 plot(mobw_loisirs_ts)
@@ -74,55 +103,86 @@ mobts_LOISIR <- ts(mob$retail_and_recreation_percent_change_from_baseline, start
 aggregate(mobts_LOISIR, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_loisirs_ts
 plot(mob_loisirs_ts)
 
+#Jours ouvrable et WE suppérposé 
+plot(mobwts_LOISIR, main = "Commerces et loisirs  – comparaison jours ouvrables / week-end (hebdomadaire) ", xlab = "Temps", ylab = "% vs baseline", lwd = 2)
+lines(mobWEts_LOISIR, lwd = 2, lty = 2)
+legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 
 ```
 
 ```{r Autocorrélation LOISIR}
-acf(mobw_loisirs_ts)
-acf(mobWE_loisirs_ts)
-acf(mob_loisirs_ts)
+acf(mobw_loisirs_ts, main = "ACF – LOISIR (jours de semaine, hebdomadaire)")
+acf(mobWE_loisirs_ts,main = "ACF – LOISIR (week-end, hebdomadaire)")
+acf(mob_loisirs_ts,main = "ACF – LOISIR (série complète, hebdomadaire)")
 ```
 
-```{r}
+```{r tendance locale et générale de loisir}
+trend.test(mobw_loisirs_ts, R=999)->trend.test_w_loisir
+plot(trend.test_w_loisir)
+trend.test_w_loisir
+trend.test(mobWE_loisirs_ts, R=999)->trend.test_WE_loisir
+plot(trend.test_WE_loisir)
+trend.test_WE_loisir
+trend.test(mob_loisirs_ts,R=999)->trend.test_loisir
+plot(trend.test_loisir)
+trend.test_loisir
+
+local.trend(mobw_loisirs_ts,  main = "Tendance locale – LOISIR (jours ouvrables)")->local.trend_w_loisir
+local.trend(mobWE_loisirs_ts, main = "Tendance locale – LOISIR (week-end)")->local.trend_WE_loisir
+local.trend(mob_loisirs_ts, main = "Tendance locale – LOISIR (hebdomadaire)")->local.trend_loisir
+```
+
+
+```{r décomposition}
 mobw_mm_loisir <- tsd(mobw_loisirs_ts, method = "average", order = 5, times = 3)
 plot(mobw_mm_loisir)
 mobWE_mm_loisir <- tsd(mobWE_loisirs_ts, method = "average", order = 5, times = 3)
 plot(mobWE_mm_loisir)
 mob_mm_loisir <- tsd(mob_loisirs_ts, method = "average", order = 5, times = 3)
 plot(mob_mm_loisir)
+#A regarder si je vais garder ceci ou LOESS sa depend des résultats 
 ```
 
-```{r loisir}
-mob_mts <- tseries(mob_mm_loisir)   #semaine
-acf(mob_mts[, "filtered"])
-acf(mob_mts[, "residuals"])
+```{r decomp_LOESS_loisir}
+loisir_loess <- tsd(mob_loisirs_ts, method   = "loess", s.window = 53, trend    = TRUE, robust   = TRUE)
+plot(loisir_loess, main = "Décomposition LOESS – LOISIR (hebdomadaire, série complète)")
 
-mobWE_mts <- tseries(mobWE_mm_loisir)   #WE
-acf(mobWE_mts[, "filtered"])
-acf(mobWE_mts[, "residuals"])
+loisir_loess_w <- tsd(mobw_loisirs_ts, method   = "loess", s.window = 53, trend    = TRUE, robust   = TRUE)
+plot(loisir_loess_w, main = "Décomposition LOESS – LOISIR (jours ouvrables)")
 
-mobw_mts <- tseries(mobw_mm_loisir)   # semaine sans WE
-acf(mobw_mts[, "filtered"])
-acf(mobw_mts[, "residuals"])
+loisir_loess_WE <- tsd(mobWE_loisirs_ts, method   = "loess", s.window = 53, trend    = TRUE, robust   = TRUE)
+plot(loisir_loess_WE, main = "Décomposition LOESS – LOISIR (Week-end)")
 ```
+```{r extraction des résidus }
+mts_loisir <- tseries(loisir_loess)
+plot(mts_loisir)
 
-```{r loisir stat slide}
+mts_loisir_w<- tseries(loisir_loess_w)
+plot(mts_loisir_w)
 
-loisir_loess <- stat.slide( mob_loisirs_ts, method   = "loess", s.window = 53,trend    = TRUE, robust   = TRUE )
-plot(loisir_loess)
-
-loisir_loess_WE <- stat.slide( mobWE_loisirs_ts, method   = "loess", s.window = 53,trend    = TRUE, robust   = TRUE )
-plot(loisir_loess_WE)
-
-loisir_loess_w <- stat.slide( mobw_loisirs_ts, method   = "loess", s.window = 53,trend    = TRUE, robust   = TRUE )
-plot(loisir_loess_w)
+tseries(loisir_loess_WE)->mts_loisir_WE
+plot(mts_loisir_WE)
 
 ```
 
-```{r loisir spectrum }
-spectrum(mob_mts,spans = c(5, 3))->spect_loisir
-spectrum(mobw_mts,spans = c(5, 3))-> spect_loisir_w
-spectrum(mobWE_mts,spans = c(5, 3))->spect_loisir_WE
+```{r}
+acf(mts_loisir[, "trend"])
+acf(mts_loisir_w[, "trend"])
+acf(mts_loisir_WE[, "trend"])
+```
+
+```{r}
+spectrum(mts_loisir[, "trend"], spans = c(5,7))
+spectrum(mts_loisir_w[, "trend"], spans = c(5,7))
+spectrum(mts_loisir_WE[, "trend"], spans = c(5,7))
+
+```
+
+```{r}
+acf(mts_loisir[, "residuals"])
+acf(mts_loisir_w[, "residuals"])
+acf(mts_loisir_WE[, "residuals"])
+
 ```
 
 ```{r TRAVAIL}
