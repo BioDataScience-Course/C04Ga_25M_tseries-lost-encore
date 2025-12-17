@@ -58,9 +58,62 @@ La présence de tendances a été examinée à l’aide de tests de tendance glo
 Enfin, les séries temporelles ont été décomposées à l’aide de méthodes de moyenne mobile et de décomposition de type LOESS, permettant de séparer les composantes de tendance, de saisonnalité et de résidus. Cette approche vise à isoler la dynamique de fond de la mobilité et à faciliter la comparaison des comportements observés entre les différentes phases de la pandémie.
 
 ## Résultats
+### Importation des données 
+```{r setup, include=FALSE}
+# Nécessaire pour les tests SDD, ne pas utiliser dans un "vrai" projet
+if (!"tools:tests" %in% search())
+  source(here::here("tests/tools_tests.R"), attach(NULL, name = "tools:tests"))
+# Configuration de l'environnement
+SciViews::R("ts")
+```
+
+```{r Importation mobility wallonia rds}
+
+read("data/mobility_wallonia.rds") -> mob
+mobw <- mob
+mobw$weekdays <- weekdays(as.POSIXct(mobw$date))
+mobw[mobw$weekdays == "Saturday" | mobw$weekdays == "Sunday", 2:7] <- NA # Contient que les 5 jours de la semaine
+mobw_ts <- ts(mobw$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+mobw_ts2 <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+
+# Contient que le week-end
+mobWE <- mob
+mobWE$weekdays <- weekdays(as.POSIXct(mobWE$date))
+mobWE[mobWE$weekdays != "Saturday" & mobWE$weekdays != "Sunday", 2:7] <- NA
+mobWE_ts <- ts(mobWE$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+mobWE_ts2 <- aggregate(mobWE_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+```
 
 <!--% Présentez les analyses les plus pertinents que vous avez sélectionnés. Structurez la section en partie avec des titres explicites de niveau trois.-->
+### Variable loisir 
+```{r loisir }
+#semaine compléte
+mobts_LOISIR <- ts(mob$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+aggregate(mobts_LOISIR, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_loisirs_ts
+plot(mob_loisirs_ts)
+
+acf(mob_loisirs_ts,main = "ACF – LOISIR (série complète, hebdomadaire)")
+
+loisir_loess <- tsd(mob_loisirs_ts, method   = "loess", s.window = 53, trend    = TRUE, robust   = TRUE)
+plot(loisir_loess, main = "Décomposition LOESS – LOISIR (hebdomadaire, série complète)")
+```
+#### Description
+Dans le but de caractériser l’évolution globale de la mobilité liée aux commerces et aux loisirs en Wallonie, la série temporelle a d’abord été agrégée à l’échelle hebdomadaire et représentée graphiquement.
+En l'analysant, on observe une chute brutale et marquée au début de l’année 2020, ce qui correspond à la mise en place du premier confinement. Cette baisse atteint des valeurs très négatives, illustrant une forte réduction des déplacements vers les lieux de loisirs et de consommation non essentielle.
+À partir de la seconde moitié de 2020 et surtout mi-2021, une reprise progressive de la mobilité est visible. Malgrès tout, les niveaux observés restent globalement inférieurs à la référence, indiquant un impact durable de la pandémie sur les comportements de déplacement. On observe vers fin 2022 un retour aux valeurs de référence pré-pandémique.
+Nous avons conservé ce graphique car il illuste la série temporelle tout en reduisant le bruit et en conservant les dynamique temporelles 
+
+L’observation de la série suggère l’existence de structures temporelles persistantes. Afin de vérifier formellement la dépendance entre les observations successives et d’évaluer la stationnarité de la série, une analyse de l’autocorrélation a ensuite été réalisée.
+La fonction d’autocorrélation (ACF) met en évidence une forte corrélation positive pour les premiers retards, qui décroît lentement au fil des lags. Ce quo indique que les observations successives ne sont pas indépendantes et que la série présente une forte dépendance temporelle, caractéristique d’une série non stationnaire dominée par une tendance de long terme. La décroissance n'est pas rapide ce qui suggère que les variations observées sont liées à des phénomènes persistants dans le temps, tels que les mesures sanitaires prolongées. L’ACF est conservée car elle permet de justifier formellement l’utilisation de méthodes de décomposition car la série nécessite une séparation entre tendance, saisonnalité et résidus pour comprendre sa structure interne.
+
+ Afin de mieux comprendre cette dynamique et de distinguer les différentes composantes de la série, une décomposition temporelle a été appliquée.
+La décomposition LOESS permet de séparer la série de mobilité en plusieurs composantes afin de mieux en comprendre la structure. La tendance met en évidence une chute brutale de la mobilité au début de l’année 2020, suivie d’une reprise progressive, reflétant l’impact durable de la pandémie de COVID-19. La composante saisonnière indique que certains comportements cycliques persistent malgré la crise sanitaire. Enfin, les résidus correspondent à des variations de court terme, liées à des événements ponctuels tels que l’introduction ou la levée de mesures sanitaires. L’utilisation de la méthode LOESS est particulièrement adaptée car elle permet de modéliser une tendance non linéaire et de capturer les ruptures induites par la pandémie.
+
 
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
+### Discussion
+L’analyse de la mobilité liée aux commerces et aux loisirs met clairement en évidence l’impact majeur de la pandémie de COVID-19 sur les déplacements en Wallonie. La chute brutale observée au début de l’année 2020 correspond aux premières mesures de confinement, qui ont fortement limité les activités non essentielles.Les analyses temporelles montrent que cet impact ne se limite pas à une perturbation ponctuelle, mais qu’il s’inscrit dans une dynamique de long terme, comme en témoigne le caractère non stationnaire de la série. La reprise progressive observée à partir de 2021 suggère une adaptation graduelle des comportements de mobilité, sans retour immédiat aux niveaux pré-pandémiques.
+### Conclusion : 
+L’analyse de la mobilité liée aux commerces et aux loisirs met en évidence une rupture structurelle majeure à partir de 2020, suivie d’une reprise progressive mais incomplète des déplacements, ces résultats soulignent l’impact durable de la pandémie sur les comportements de mobilité, au-delà des périodes de confinement strict. 
