@@ -422,19 +422,19 @@ mts_transportFS <- tseries(transportFS_loess)
 plot(mts_transportFS)  
 ```
 
-```{r}
+```{r autocorrélation transport}
 acf(mts_transport[, "trend"]) 
 acf(mts_transportDS[, "trend"]) 
 acf(mts_transportFS[, "trend"])  
 ```
 
-```{r}
+```{r spectrum transport}
 spectrum(mts_transport[, "trend"], spans = c(5,7)) 
 spectrum(mts_transportDS[, "trend"], spans = c(5,7)) 
 spectrum(mts_transportFS[, "trend"], spans = c(5,7))  
 ```
 
-```{r}
+```{r autocorrélation transport}
 acf(mts_transport[, "residuals"]) 
 acf(mts_transportDS[, "residuals"]) 
 acf(mts_transportFS[, "residuals"])  
