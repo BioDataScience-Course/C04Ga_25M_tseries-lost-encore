@@ -357,6 +357,8 @@ transportFS_loess <- tsd(mobFS_ts_transport, method = "loess", s.window = 53, tr
 plot(transportFS_loess, main = "Décomposition LOESS de TRANSPORT (Fin de semaine: samedi et dimanche)") 
 ```
 
+On voit qu'il y a une tendance générale à l'augmentation de la série. Il y a un cycle saisonnier dans lequel au début il y a une chute de -20% et ensuite ça se recupère dans un plateau, puis sa augmente vite de 40%, finalement, il y a une chute de -40% et une récupération de 20%
+
 ```{r extraction des résidus de Transport }
 
 mts_transport <- tseries(transport_loess)  
@@ -404,3 +406,5 @@ acf(mts_transportFS[, "residuals"])
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
 
 ...vos conclusions ici...
+
+En général, on a une forte diminution au début puis une augmentation progressive qui se répète chaque année, mais pour chaque année il y a une augmentation du double par rapport à l'année précédente. Ceci pour le Travail, les Loirsirs et le Transport, à exception de la Résidence ou c'est exactement l'inverse.
