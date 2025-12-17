@@ -1,6 +1,6 @@
 ---
-title: "Etude de l'impacte du Covid-19 sur la mobilité en Wallonies"
-author: "Benzine Morjane , Bourdan Yasmina, Théodor Nica, Lindsey Marissens Cueva"
+title: "Etude de l'impacte du Covid-19 sur la mobilité en Wallonies - notebook"
+author: "Benzine Morjane , Bourdan Yasmina, Théodore Nica, Lindsey Marissens Cueva"
 format:
   pdf:
     documentclass: report

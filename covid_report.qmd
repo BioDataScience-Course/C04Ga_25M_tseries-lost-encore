@@ -1,6 +1,6 @@
 ---
-title: "___"
-author: "___, ___, ___, ___"
+title: "Etude de l'impacte du Covid-19 sur la mobilité en Wallonies"
+author: "Benzine Morjane , Bourdan Yasmina, Théodore Nica, Lindsey Marissens Cueva"
 format:
   pdf:
     documentclass: report
@@ -17,13 +17,45 @@ lang: fr
 
 <!--% Rédigez l'introduction de ce rapport.-->
 
+La pandémie de COVID-19 a profondément modifié les comportements de mobilité des populations à l’échelle mondiale, sous l’effet des mesures sanitaires mises en place pour limiter la propagation du virus, telles que les confinements successifs, les restrictions de déplacements et le recours massif au télétravail. Ces mesures ont entraîné des changements rapides et parfois durables dans l’organisation des déplacements quotidiens, affectant à la fois les mobilités contraintes, liées au travail et aux transports, et les mobilités non contraintes, associées aux loisirs et à la vie sociale. En Belgique, et plus particulièrement en Wallonie, ces transformations se sont traduites par des modifications notables de la fréquentation de différents types de lieux.
+
+Afin de quantifier et de caractériser ces évolutions, Google a mis à disposition des données de mobilité communautaire, qui mesurent les variations de fréquentation de plusieurs catégories de lieux par rapport à une période de référence pré-pandémique. Ces données, agrégées et anonymisées, constituent une source particulièrement pertinente pour analyser, dans une perspective temporelle, l’impact des différentes phases de la pandémie et des politiques publiques associées sur les comportements de mobilité.
+
+Dans ce rapport, nous nous concentrons sur quatre dimensions complémentaires de la mobilité : le temps passé à domicile (*résidence*), la fréquentation des lieux de *loisirs*, la mobilité liée au *travail*, ainsi que les déplacements associés aux *transports*. L’analyse conjointe de ces paramètres permet de distinguer les effets différenciés des contraintes professionnelles, des restrictions sociales et de l’évolution progressive des habitudes de déplacement, tout en offrant une vision globale des recompositions de la mobilité en Wallonie.
+
+L’étude de ces indicateurs à travers des séries temporelles couvrant la période 2020–2022 vise à mettre en évidence les ruptures induites par les différentes vagues de la pandémie, les tendances de long terme ainsi que les phases d’adaptation des comportements. Cette approche permet d’évaluer non seulement l’impact immédiat de la crise sanitaire, mais également la persistance éventuelle de certains changements dans les pratiques de mobilité.
+
 ## But
 
 <!--% Rédigez le but de ce rapport.-->
 
+L’objectif de ce rapport est de quantifier, comparer et interpréter l’impact de la pandémie de COVID-19 sur la mobilité des personnes en Wallonie à partir des données de mobilité communautaire de Google. Plus précisément, ce travail vise à analyser l’évolution temporelle de plusieurs indicateurs clés de mobilité — le temps passé à domicile (*résidence*), la fréquentation des lieux de *loisirs*, les déplacements liés au *travail* et l’utilisation des *transports* — afin d’identifier les ruptures, les tendances de long terme et les dynamiques d’adaptation associées aux différentes phases de la pandémie.
+
+À travers l’analyse de séries temporelles couvrant les années 2020 à 2022, ce rapport cherche à mettre en évidence les différences de réponse entre ces dimensions de la mobilité et à déterminer dans quelle mesure les comportements observés se rapprochent, ou non, des niveaux pré-pandémiques. L’ensemble de ces analyses vise à apporter une compréhension intégrée des transformations de la mobilité en Wallonie dans le contexte de la crise sanitaire.
+
 ## Matériel et méthodes
 
 <!--% Cette section doit comprendre deux parties. La première partie doit expliciter le données employées et la seconde traiter des analyses réalisées et des logiciels employés.-->
+
+Les données utilisées dans ce travail proviennent des *Google COVID-19 Community Mobility Reports*, publiés durant la pandémie de COVID-19. Ces rapports fournissent des informations agrégées et anonymisées sur l’évolution relative de la fréquentation de différents types de lieux, exprimée en pourcentage de variation par rapport à une période de référence pré-pandémique. Ils constituent une source de données particulièrement adaptée à l’analyse des changements de comportements de mobilité dans un contexte de crise sanitaire.
+
+Dans le cadre de ce projet, une sauvegarde locale des données correspondant à la Wallonie a été mise à disposition sous la forme du fichier `data/mobility_wallonia.rds`. Les données couvrent une période allant de février 2020 à octobre 2022, englobant les principales phases de la pandémie ainsi que la reprise progressive des activités. L’analyse se concentre principalement sur les années 2020 et 2021, qui correspondent aux périodes durant lesquelles les mesures sanitaires ont été les plus contraignantes et ont eu l’impact le plus marqué sur la mobilité.
+
+L’ensemble des analyses a été réalisé à l’aide du logiciel R (version 4.4.1, 2024-06-14), en s’appuyant sur les outils et packages présentés dans le cadre du cours *Science des données biologiques 3*.
+
+### *Prétraitement des données*
+
+Les données de mobilité étant initialement disponibles sous forme d’observations journalières, un prétraitement a été réalisé afin de structurer l’information temporelle et de faciliter l’analyse des dynamiques de moyen et long terme. Les dates ont été utilisées pour identifier les jours de la semaine, permettant de distinguer les jours ouvrables des week-ends. Afin d’analyser séparément ces deux contextes temporels, les valeurs correspondant aux jours non concernés ont été remplacées par des valeurs manquantes (NA), puis des séries temporelles distinctes ont été construites.
+
+Les séries journalières ont ensuite été agrégées à une échelle hebdomadaire par calcul de moyennes, dans le but de réduire la variabilité journalière et de mettre en évidence les tendances sous-jacentes. Les séries temporelles ont été formalisées à l’aide de la fonction ts, avec une fréquence correspondant à des observations journalières, puis adaptées à l’échelle hebdomadaire pour les analyses ultérieures.
+
+### *Analyses statistiques des séries temporelles*
+
+L’analyse des données repose sur plusieurs méthodes issues de l’analyse des séries temporelles. Dans un premier temps, une analyse descriptive et graphique des séries a été réalisée afin d’identifier les grandes évolutions temporelles et les ruptures associées aux différentes phases de la pandémie. La dépendance temporelle des observations a ensuite été étudiée à l’aide des fonctions d’autocorrélation (ACF), permettant d’évaluer la structure interne des séries et leur stationnarité.
+
+La présence de tendances a été examinée à l’aide de tests de tendance globale, basés sur des méthodes de rééchantillonnage de type bootstrap, afin de détecter l’existence d’évolutions significatives sur l’ensemble de la période étudiée. En complément, une analyse de la tendance locale a été menée afin de mettre en évidence les variations progressives de la dynamique temporelle au cours du temps.
+
+Enfin, les séries temporelles ont été décomposées à l’aide de méthodes de moyenne mobile et de décomposition de type LOESS, permettant de séparer les composantes de tendance, de saisonnalité et de résidus. Cette approche vise à isoler la dynamique de fond de la mobilité et à faciliter la comparaison des comportements observés entre les différentes phases de la pandémie.
 
 ## Résultats
 
