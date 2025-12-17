@@ -139,7 +139,7 @@ local.trend(mob_loisirs_ts, main = "Tendance locale – LOISIR (hebdomadaire)")-
 L’analyse de la tendance locale met en évidence des changements au cours du temps. Une forte tendance négative est observée au début de la période étudiée, suivie d’un point bas autour de l’année 2021. Ensuite, une reprise progressive est visible, tant pour les jours ouvrables que pour les week-ends, bien que cette reprise soit plus marquée pour les activités de loisirs durant les week-ends.
 Donc durant le confinement les gens vont moins au centre commerciaux et font moins de loisir, ce qui coïncide avec le confinement et après lors des réouverture la tendance augmente les gens ressortent aux magasins.
 Les résultats du test de tendance générale basé sur bootstrap montrent que la statistique de test est significativement différente de zéro. La distribution bootstrap et le QQ-plot indiquent une bonne approximation par une loi normale, confirmant l’existence d’une tendance significative dans les séries de mobilité liées aux loisirs.
-```{r décomposition}
+```{r loisir décomposition}
 mobw_mm_loisir <- tsd(mobw_loisirs_ts, method = "average", order = 5, times = 3)
 plot(mobw_mm_loisir)
 mobWE_mm_loisir <- tsd(mobWE_loisirs_ts, method = "average", order = 5, times = 3)
@@ -186,13 +186,13 @@ Les résidus sont très négatifs au début (dans les 3 cas), puis reviennent ve
 La saisonnalité est bien visible et assez régulière.
 La tendance monte puis forme un plateau vers la fin.
 Et donc les restriction du confinnement ont fait que les gens fréquentaient moins les commerces et leurs loisirs et petit à petit ils ont put  reprendre leusr activité normalement.
-```{r}
+```{r loisir autocorelation}
 acf(mts_loisir[, "trend"])
 acf(mts_loisir_w[, "trend"])
 acf(mts_loisir_WE[, "trend"])
 ```
 L’autocorrélation élevée et persistante de la composante de tendance indique une forte dépendance temporelle, confirmant le caractère non stationnaire de la série, principalement induit par la rupture structurelle associée à la pandémie de COVID-19.
-```{r}
+```{r spectrum}
 spectrum(mts_loisir[, "trend"], spans = c(5,7))
 spectrum(mts_loisir_w[, "trend"], spans = c(5,7))
 spectrum(mts_loisir_WE[, "trend"], spans = c(5,7))
@@ -201,7 +201,7 @@ spectrum(mts_loisir_WE[, "trend"], spans = c(5,7))
 Le spectre est fortement concentré aux basses fréquences. Il n’y a pas de pic marqué à des fréquences élevées. La puissance spectrale décroît rapidement quand la fréquence augmente.
 Ce qui confirme que la tendance est dominée par des variations lentes, sans périodicité courte marquée.
 Il n’y a pas de cycle régulier hebdomadaire ou saisonnier dans la tendance ils ont été correctement séparés dans la composante seasonal lors de la décomposition LOESS.
-```{r}
+```{r loisir autorrelation}
 acf(mts_loisir[, "residuals"])
 acf(mts_loisir_w[, "residuals"])
 acf(mts_loisir_WE[, "residuals"])
