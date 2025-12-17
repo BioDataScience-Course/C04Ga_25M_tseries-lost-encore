@@ -1,6 +1,6 @@
 ---
-title: "___"
-author: "Lindsey - Yasmina - Théodore - Morjane"
+title: "Etude de l'impact du Covid-19 sur la mobilité en Wallonie"
+author: "Yasmina Bourdan - Théodore Nica - Morjane Benzine - Lindsey Marissens Cueva"
 format:
   html:
     code-fold: true
@@ -60,7 +60,8 @@ mobWE_ts <- ts(mobWE$retail_and_recreation_percent_change_from_baseline, start =
 mobWE_ts2 <- aggregate(mobWE_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 ```
 
-#Présentation du jeux de données ##Mobilité lié aux Commerces et aux loisirs
+#Présentation du jeux de données 
+##Mobilité lié aux Commerces et aux loisirs
 
 ```{r loisir et commerce présentation des données}
 # Série brut, semaine
@@ -81,22 +82,16 @@ lines(mobWE_loisir_brut, lwd = 2, lty = 2)
 legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 
 ```
-<<<<<<< HEAD
-
-La mobilité liée aux commerces et aux loisirs montre une chute marquée au début de l’année 2020, particulièrement prononcée durant les week-ends. La reprise est progressive à partir de mi-2021, avec une variabilité plus importante observée pour les jours de week-end que pour les jours de semaine.
-
-Et quand on supperpose l’évolution de la mobilité liée aux commerces et aux loisirs en Wallonie entre 2020 et 2022, en distinguant les jours ouvrables et les week-ends. On observe une chute brutale de la mobilité au début de l’année 2020, plus marquée durant les week-ends que durant les jours ouvrables. La reprise est progressive mi-2021, avec des valeurs qui restent globalement négatives pendant une longue période. Puis elle se stabilise et devient majoritairement positive, surtout les week-ends, qui présentent une variabilité plus importante que les jours de semaine. #Analyse : ##Loisir et commerces ###Préparation des données
-
-=======
 L’analyse descriptive des séries temporelles de mobilité liées aux commerces et aux loisirs en Wallonie met en évidence une chute brutale et immédiate de la mobilité au début de l’année 2020, correspondant à la mise en place des premières mesures de confinement liées à la pandémie de COVID-19.
 Cette diminution est observable dans les trois séries étudiées (série complète, jours ouvrables et week-ends), mais elle apparaît plus marquée durant les week-ends que pendant les jours ouvrables. En semaine, la baisse est également présente, mais elle est plus lissée, traduisant le maintien partiel de déplacements essentiels.
 À partir de l’année 2021, une reprise progressive de la fréquentation des commerces et des loisirs est observée, bien que les niveaux de mobilité ne retrouvent pas ceux de la période de référence pré-pandémique.
 La distinction entre jours ouvrables et week-ends met en évidence que les activités de loisirs ont été plus fortement affectées par la crise sanitaire qu’en semaine. 
 Ces différences justifient l’utilisation des méthodes d’analyse statistique adaptées aux séries temporelles pour approfondir l’étude.
+
+
 #Analyse : 
 ##Loisir et commerces
 ###Préparation des données 
->>>>>>> 0ceffcb20a81d317c202902b2281fe531a5cff6e
 ```{r LOISIR Hebdomadaire }
 #Jours ouvrables
 mobwts_LOISIR <- ts(mobw$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
@@ -120,6 +115,7 @@ legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd 
 ```
 Ici on a fait une  agrégation hebdomadaire, pour lisser la ts et la rendre plus lisible.On voit chute importante début 2020, puis une reprise progressive à partir de 2021 et une stabilisation relative ensuite.La ts week-end a une amplitude plus grande et presente  plus de variations. 
 Et celle des jours ouvrables est un  peu plus lissée et moins extrême.
+
 ##Analyse statistique
 ```{r Autocorrélation LOISIR}
 acf(mobw_loisirs_ts, main = "ACF – LOISIR (jours de semaine, hebdomadaire)")
@@ -144,13 +140,10 @@ local.trend(mobw_loisirs_ts,  main = "Tendance locale – LOISIR (jours ouvrable
 local.trend(mobWE_loisirs_ts, main = "Tendance locale – LOISIR (week-end)")->local.trend_WE_loisir
 local.trend(mob_loisirs_ts, main = "Tendance locale – LOISIR (hebdomadaire)")->local.trend_loisir
 ```
-<<<<<<< HEAD
-
-=======
 L’analyse de la tendance locale met en évidence des changements au cours du temps. Une forte tendance négative est observée au début de la période étudiée, suivie d’un point bas autour de l’année 2021. Ensuite, une reprise progressive est visible, tant pour les jours ouvrables que pour les week-ends, bien que cette reprise soit plus marquée pour les activités de loisirs durant les week-ends.
 Donc durant le confinement les gens vont moins au centre commerciaux et font moins de loisir, ce qui coïncide avec le confinement et après lors des réouverture la tendance augmente les gens ressortent aux magasins.
 Les résultats du test de tendance générale basé sur bootstrap montrent que la statistique de test est significativement différente de zéro. La distribution bootstrap et le QQ-plot indiquent une bonne approximation par une loi normale, confirmant l’existence d’une tendance significative dans les séries de mobilité liées aux loisirs.
->>>>>>> 0ceffcb20a81d317c202902b2281fe531a5cff6e
+
 ```{r décomposition}
 mobw_mm_loisir <- tsd(mobw_loisirs_ts, method = "average", order = 5, times = 3)
 plot(mobw_mm_loisir)
@@ -178,15 +171,12 @@ plot(loisir_loess_w, main = "Décomposition LOESS – LOISIR (jours ouvrables)")
 loisir_loess_WE <- tsd(mobWE_loisirs_ts, method   = "loess", s.window = 53, trend    = TRUE, robust   = TRUE)
 plot(loisir_loess_WE, main = "Décomposition LOESS – LOISIR (Week-end)")
 ```
-<<<<<<< HEAD
-
-=======
 La décomposition LOESS est privilégiée car elle capture correctement les tendances de long terme et les structures saisonnières sans imposer d’hypothèse linéaire stricte, tout en laissant des résidus faiblement structurés.
 La COVID-19 a provoqué une rupture majeure dans la mobilité liée aux loisirs,
 cet impact est visible à la fois sur la tendance de long terme et les variations à court terme,
 tandis que la structure saisonnière persiste, bien que temporairement perturbée.
 La décomposition LOESS est privilégiée car elle capture correctement les tendances de long terme et les structures saisonnières sans imposer d’hypothèse linéaire stricte, tout en laissant des résidus faiblement structurés.
->>>>>>> 0ceffcb20a81d317c202902b2281fe531a5cff6e
+
 ```{r extraction des résidus }
 mts_loisir <- tseries(loisir_loess)
 plot(mts_loisir)
@@ -242,12 +232,9 @@ plot(mobWE_travail_ts)
 acf(mobw_travail_ts)
 acf(mobWE_travail_ts)
 ```
-<<<<<<< HEAD
 
-=======
 ## Résidence
 ### Visualisation des données brutes 
->>>>>>> 0ceffcb20a81d317c202902b2281fe531a5cff6e
 ```{r visualisation données résidence brutes}
 mob_ts_residence_brute <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 plot(mob_ts_residence_brute, main = "Résidence – semaines entières", xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour semaine complètes
@@ -270,12 +257,8 @@ La variable Résidence représente la variation (en %) du temps passé à domici
 Par la suite, la série présente une diminution progressive, ponctuée de fluctuations, traduisant l’alternance des mesures sanitaires en 2020 et 2021. À partir de 2022, les variations deviennent plus faibles et se rapprochent de la référence (0%).
 La distinction entre jours ouvrables et week-ends met en évidence des comportements différents. Les jours ouvrables montrent des augmentations plus importantes et plus persistantes, probablement liées au télétravail, tandis que les week-ends montrent des variations plus modérées et un retour plus rapide vers les niveaux de référence.
 
-<<<<<<< HEAD
-```{r RESIDENCE}
-=======
 ### Préparation des données
 ```{r objet ts résidence}
->>>>>>> 0ceffcb20a81d317c202902b2281fe531a5cff6e
 mobts_residence <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_residence_ts
 plot(mob_residence_ts) #objet ts reprenant la semaine entière
