@@ -1,6 +1,13 @@
-------------------------------------------------------------------------
-
-title: "Etude de l'impact du Covid-19 sur la mobilité en Wallonie" author: "Yasmina Bourdan - Théodore Nica - Morjane Benzine - Lindsey Marissens Cueva" format: html: code-fold: true code-tools: true toc: true editor: visual lang: fr
+---
+title: "Etude de l'impacte du Covid-19 sur la mobilité en Wallonies"
+author: "Benzine Morjane , Bourdan Yasmina, Théodor Nica, Lindsey Marissens Cueva"
+format:
+  pdf:
+    documentclass: report
+    toc: true
+editor: visual
+lang: fr
+---
 
 <!--# Ceci est un commentaire. -->
 
@@ -20,7 +27,17 @@ Les données utilisées proviennent des Google COVID-19 Community Mobility Repor
 
 <!--% Indiquez ici d'où viennent les données et aussi quel logiciel (et version) vous utilisez pour les analyses. Inspirez-vous des projets déjà réalisés. -->
 
-...Matériel et méthodes...
+### *Données de mobilité*
+
+Les données utilisées dans ce projet proviennent des rapports de mobilité communautaire publiés par Google pendant la pandémie de COVID-19. Ces données décrivent l’évolution relative de la fréquentation de différents types de lieux par rapport à une période de référence pré-pandémique, exprimée en pourcentage de variation. Les analyses ont été réalisées à l’aide du logiciel R (R version 4.4.1 (2024-06-14)), en utilisant les packages présentés dans le cadre du cours Science des données biologiques 3. Dans le cadre de ce travail, une sauvegarde locale des données wallonnes a été fournie sous la forme du fichier data/mobility_wallonia.rds. Les données couvrent la période de février 2020 à octobre 2022, correspondant aux phases les plus marquées de la pandémie et de la reprise progressive des activités. L’analyse se concentre principalement sur les années 2020 et 2021, qui sont les plus impactées par les mesures sanitaires.
+
+### *Prétraitement des données*
+
+Les dates ont été utilisées pour identifier les jours de la semaine, permettant de distinguer les jours ouvrables des week-ends.Afin d’étudier séparément ces deux contextes temporels, les valeurs correspondant aux jours non concernés ont été remplacées par des valeurs manquantes (NA), puis des séries temporelles distinctes ont été construites. Les séries journalières ont ensuite été agrégées à une échelle hebdomadaire par moyenne, afin de lisser les fluctuations journalières et de faciliter l’analyse des tendances de moyen et long terme. Les séries temporelles ont été créées à l’aide de la fonction ts, avec une fréquence correspondant au nombre de jours par année.
+
+### *Analyses statistiques des séries temporelles*
+
+Plusieurs méthodes issues de l’analyse des séries temporelles ont été appliquées : Analyse descriptive et graphique des séries afin d’identifier les grandes évolutions temporelles et les ruptures associées à la pandémie Fonctions d’autocorrélation (ACF) pour évaluer la dépendance temporelle des observations et la structure interne des séries ; Tests de tendance globale, basés sur des méthodes de bootstrap, afin de détecter l’existence de tendances significatives sur l’ensemble de la période étudiée ; Analyse de la tendance locale, permettant de mettre en évidence les variations progressives de la tendance au cours du temps ; Décomposition des séries temporelles, à l’aide de méthodes de moyenne mobile et de décomposition LOESS, afin de séparer les composantes de tendance, de saisonnalité et de résidus.
 
 ## Analyses
 
@@ -53,6 +70,7 @@ mobWE_ts <- ts(mobWE$retail_and_recreation_percent_change_from_baseline, start =
 mobWE_ts2 <- aggregate(mobWE_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 ```
 
+
 ## Mobilité lié aux Commerces et aux loisirs
 
 ### Présentation du jeux de données
@@ -79,7 +97,11 @@ legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd 
 
 L’analyse descriptive des séries temporelles de mobilité liées aux commerces et aux loisirs en Wallonie met en évidence une chute brutale et immédiate de la mobilité au début de l’année 2020, correspondant à la mise en place des premières mesures de confinement liées à la pandémie de COVID-19. Cette diminution est observable dans les trois séries étudiées (série complète, jours ouvrables et week-ends), mais elle apparaît plus marquée durant les week-ends que pendant les jours ouvrables. En semaine, la baisse est également présente, mais elle est plus lissée, traduisant le maintien partiel de déplacements essentiels. À partir de l’année 2021, une reprise progressive de la fréquentation des commerces et des loisirs est observée, bien que les niveaux de mobilité ne retrouvent pas ceux de la période de référence pré-pandémique. La distinction entre jours ouvrables et week-ends met en évidence que les activités de loisirs ont été plus fortement affectées par la crise sanitaire qu’en semaine. Ces différences justifient l’utilisation des méthodes d’analyse statistique adaptées aux séries temporelles pour approfondir l’étude.
 
-###Analyse : ####Préparation des données
+
+### Analyse
+
+#### Préparation des données
+
 
 ```{r LOISIR Hebdomadaire }
 #Jours ouvrables
@@ -102,10 +124,9 @@ lines(mobWEts_LOISIR, lwd = 2, lty = 2)
 legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 
 ```
-
 Ici on a fait une agrégation hebdomadaire, pour lisser la ts et la rendre plus lisible.On voit chute importante début 2020, puis une reprise progressive à partir de 2021 et une stabilisation relative ensuite.La ts week-end a une amplitude plus grande et presente plus de variations. Et celle des jours ouvrables est un peu plus lissée et moins extrême.
 
-####Analyse statistique
+#### Analyse statistique
 
 ```{r Autocorrélation LOISIR}
 acf(mobw_loisirs_ts, main = "ACF – LOISIR (jours de semaine, hebdomadaire)")
@@ -202,7 +223,9 @@ Les résidus ne sont pas 100% bruit blanc il reste une dépendance à court term
 
 Je garde la décomposition LOESS car elle capture une tendance non linéaire et robuste aux ruptures (chocs COVID), tout en séparant proprement la saisonnalité et les anomalies résiduelles.
 
-##Mobilité lié au travail
+
+## Mobilité lié au travail
+
 
 ```{r TRAVAIL}
 mobwts_travail <- ts(mobw$workplaces_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
