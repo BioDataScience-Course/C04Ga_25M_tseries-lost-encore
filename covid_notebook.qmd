@@ -458,7 +458,7 @@ acf(mts_transportFS[, "residuals"])
 <<<<<<< HEAD
 
 ...vos conclusions ici...
-En général, on a une forte diminution au début puis une augmentation progressive qui se répète chaque année, mais pour chaque année il y a une augmentation du double par rapport à l'année précédente. Ceci pour le Travail, les Loirsirs et le Transport, à exception de la Résidence ou c'est exactement l'inverse.
+En général, on a une forte diminution au début puis une augmentation progressive qui se répète chaque année, mais pour chaque année il y a une augmentation du double par rapport à l'année précédente. Ceci pour le Travail, les Loisirs et le Transport, à exception de la Résidence ou c'est exactement l'inverse.
 =======
 Les activités de loisirs ont été plus fortement affectées durant les week-ends que les jours ouvrables, habituellement ce sont durant ces jours la que les gens préfère sortir, ce qui reflète l’effet des mesures sanitaires sur les déplacements non essentiels et on peu aussi observer une tendance significative de long terme, une saisonnalité persistante et des chocs ponctuels liés aux différentes phases de la crise sanitaire.
 Le paramètre Résidence montre une forte augmentation du temps passé à domicile au début de la pandémie de COVID-19, suivie d’une diminution progressive sans retour immédiat aux niveaux pré-pandémiques. Les analyses de séries temporelles indiquent que cette évolution correspond à une dynamique de long terme, avec un impact plus prononcé durant les jours ouvrables que durant les week-ends.
