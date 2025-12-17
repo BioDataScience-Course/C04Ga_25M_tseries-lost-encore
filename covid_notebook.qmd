@@ -1,6 +1,6 @@
 ---
 title: "___"
-author: "___"
+author: "Lindsey - Yasmina - Théodore - Morjane"
 format:
   html:
     code-fold: true
