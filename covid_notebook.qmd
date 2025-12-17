@@ -8,8 +8,7 @@ format:
     toc: true
 editor: visual
 lang: fr
----410
----
+
 
 <!--# Ceci est un commentaire. -->
 
@@ -21,7 +20,9 @@ lang: fr
 
 <!--% Rédigez une courte introduction de 3 ou 5 phrases qui présente vos données. Ajoutez une phrase de but. Vous devez citer la bibliographie en utilisant le formatage Markdown ad hoc et en incluant votre référence au format bibtex dans le fichier references.bib. -->
 
-... Introduction et but...
+Ce carnet de notes a pour objectif d’explorer l’évolution de la mobilité des personnes en Wallonie avant et pendant la pandémie de COVID-19 à partir des données de mobilité fournies par Google. Il constitue un document de travail exploratoire dans lequel différentes méthodes d’analyse des séries spatio-temporelles sont testées et comparées. Les analyses présentées ici servent à identifier les structures temporelles, les tendances et les relations entre variables, afin de sélectionner les résultats les plus pertinents pour le rapport de synthèse. L’étude se concentre sur quatre paramètres de mobilité : les transports, les loisirs, le travail et la résidence.
+
+Les données utilisées proviennent des Google COVID-19 Community Mobility Reports et sont fournies sous la forme du fichier mobility_wallonia.rds. Elles correspondent à des observations journalières exprimées en pourcentage de variation par rapport à une période de référence pré-pandémique. L’analyse porte sur quatre paramètres de mobilité jugés représentatifs des changements de comportement : les transports, les loisirs, le travail et la résidence. 
 
 ## Matériel et méthodes
 
