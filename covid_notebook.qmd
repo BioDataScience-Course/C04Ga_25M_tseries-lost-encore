@@ -307,7 +307,7 @@ lt_residence_w <- local.trend(mobw_residence_ts, main="Test de tendance locale -
 tt_residence_WE <- trend.test(mobWE_residence_ts, R = 999)
 tt_residence_WE
 plot(tt_residence_WE)
-lt_residence_WE <- local.trend(mobWE_residence_ts, main="Test de tendance locale - résidence - week-ends")
+lt_residence_WE <- local.trend(mobWE_residence_ts, main="Test de tendance locale - résidence - week-ends") 
 ```
 Le test de tendance globale, appliqué aux 3 séries indique que l’hypothèse d’absence de tendance peut être rejetée. L’évolution observée ne peut donc pas être attribuée uniquement à des fluctuations aléatoires, ce qui confirme la présence d’une composante de long terme dans la série. Pour les semaines complètes et les jours ouvrables, une augmentation marquée est observée au début de l’année 2020, suivie d’un maintien à des niveaux élevés au cours de l’année 2021, puis d’une diminution progressive à partir de 2021–2022. 
 La série correspondant aux week-ends présente une évolution similaire, mais avec des amplitudes plus faibles, suggérant un impact moins durable sur les comportements résidentiels durant ces périodes.
