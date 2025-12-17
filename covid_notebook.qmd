@@ -453,4 +453,4 @@ acf(mts_transportFS[, "residuals"])
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
 
-...vos conclusions ici...
+Le paramètre Résidence montre une forte augmentation du temps passé à domicile au début de la pandémie de COVID-19, suivie d’une diminution progressive sans retour immédiat aux niveaux pré-pandémiques. Les analyses de séries temporelles indiquent que cette évolution correspond à une dynamique de long terme, avec un impact plus prononcé durant les jours ouvrables que durant les week-ends.
