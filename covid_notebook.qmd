@@ -1,14 +1,6 @@
----
-title: "Etude de l'impact du Covid-19 sur la mobilité en Wallonie"
-author: "Yasmina Bourdan - Théodore Nica - Morjane Benzine - Lindsey Marissens Cueva"
-format:
-  html:
-    code-fold: true
-    code-tools: true
-    toc: true
-editor: visual
-lang: fr
+------------------------------------------------------------------------
 
+title: "Etude de l'impact du Covid-19 sur la mobilité en Wallonie" author: "Yasmina Bourdan - Théodore Nica - Morjane Benzine - Lindsey Marissens Cueva" format: html: code-fold: true code-tools: true toc: true editor: visual lang: fr
 
 <!--# Ceci est un commentaire. -->
 
@@ -22,7 +14,7 @@ lang: fr
 
 Ce carnet de notes a pour objectif d’explorer l’évolution de la mobilité des personnes en Wallonie avant et pendant la pandémie de COVID-19 à partir des données de mobilité fournies par Google. Il constitue un document de travail exploratoire dans lequel différentes méthodes d’analyse des séries spatio-temporelles sont testées et comparées. Les analyses présentées ici servent à identifier les structures temporelles, les tendances et les relations entre variables, afin de sélectionner les résultats les plus pertinents pour le rapport de synthèse. L’étude se concentre sur quatre paramètres de mobilité : les transports, les loisirs, le travail et la résidence.
 
-Les données utilisées proviennent des Google COVID-19 Community Mobility Reports et sont fournies sous la forme du fichier mobility_wallonia.rds. Elles correspondent à des observations journalières exprimées en pourcentage de variation par rapport à une période de référence pré-pandémique. L’analyse porte sur quatre paramètres de mobilité jugés représentatifs des changements de comportement : les transports, les loisirs, le travail et la résidence. 
+Les données utilisées proviennent des Google COVID-19 Community Mobility Reports et sont fournies sous la forme du fichier mobility_wallonia.rds. Elles correspondent à des observations journalières exprimées en pourcentage de variation par rapport à une période de référence pré-pandémique. L’analyse porte sur quatre paramètres de mobilité jugés représentatifs des changements de comportement : les transports, les loisirs, le travail et la résidence.
 
 ## Matériel et méthodes
 
@@ -61,8 +53,9 @@ mobWE_ts <- ts(mobWE$retail_and_recreation_percent_change_from_baseline, start =
 mobWE_ts2 <- aggregate(mobWE_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 ```
 
-##Mobilité lié aux Commerces et aux loisirs
-###Présentation du jeux de données 
+## Mobilité lié aux Commerces et aux loisirs
+
+### Présentation du jeux de données
 
 ```{r loisir et commerce présentation des données}
 # Série brut, semaine
@@ -83,15 +76,11 @@ lines(mobWE_loisir_brut, lwd = 2, lty = 2)
 legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 
 ```
-L’analyse descriptive des séries temporelles de mobilité liées aux commerces et aux loisirs en Wallonie met en évidence une chute brutale et immédiate de la mobilité au début de l’année 2020, correspondant à la mise en place des premières mesures de confinement liées à la pandémie de COVID-19.
-Cette diminution est observable dans les trois séries étudiées (série complète, jours ouvrables et week-ends), mais elle apparaît plus marquée durant les week-ends que pendant les jours ouvrables. En semaine, la baisse est également présente, mais elle est plus lissée, traduisant le maintien partiel de déplacements essentiels.
-À partir de l’année 2021, une reprise progressive de la fréquentation des commerces et des loisirs est observée, bien que les niveaux de mobilité ne retrouvent pas ceux de la période de référence pré-pandémique.
-La distinction entre jours ouvrables et week-ends met en évidence que les activités de loisirs ont été plus fortement affectées par la crise sanitaire qu’en semaine. 
-Ces différences justifient l’utilisation des méthodes d’analyse statistique adaptées aux séries temporelles pour approfondir l’étude.
 
+L’analyse descriptive des séries temporelles de mobilité liées aux commerces et aux loisirs en Wallonie met en évidence une chute brutale et immédiate de la mobilité au début de l’année 2020, correspondant à la mise en place des premières mesures de confinement liées à la pandémie de COVID-19. Cette diminution est observable dans les trois séries étudiées (série complète, jours ouvrables et week-ends), mais elle apparaît plus marquée durant les week-ends que pendant les jours ouvrables. En semaine, la baisse est également présente, mais elle est plus lissée, traduisant le maintien partiel de déplacements essentiels. À partir de l’année 2021, une reprise progressive de la fréquentation des commerces et des loisirs est observée, bien que les niveaux de mobilité ne retrouvent pas ceux de la période de référence pré-pandémique. La distinction entre jours ouvrables et week-ends met en évidence que les activités de loisirs ont été plus fortement affectées par la crise sanitaire qu’en semaine. Ces différences justifient l’utilisation des méthodes d’analyse statistique adaptées aux séries temporelles pour approfondir l’étude.
 
-###Analyse : 
-####Préparation des données 
+###Analyse : ####Préparation des données
+
 ```{r LOISIR Hebdomadaire }
 #Jours ouvrables
 mobwts_LOISIR <- ts(mobw$retail_and_recreation_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
@@ -113,17 +102,18 @@ lines(mobWEts_LOISIR, lwd = 2, lty = 2)
 legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 
 ```
-Ici on a fait une  agrégation hebdomadaire, pour lisser la ts et la rendre plus lisible.On voit chute importante début 2020, puis une reprise progressive à partir de 2021 et une stabilisation relative ensuite.La ts week-end a une amplitude plus grande et presente  plus de variations. 
-Et celle des jours ouvrables est un  peu plus lissée et moins extrême.
+
+Ici on a fait une agrégation hebdomadaire, pour lisser la ts et la rendre plus lisible.On voit chute importante début 2020, puis une reprise progressive à partir de 2021 et une stabilisation relative ensuite.La ts week-end a une amplitude plus grande et presente plus de variations. Et celle des jours ouvrables est un peu plus lissée et moins extrême.
 
 ####Analyse statistique
+
 ```{r Autocorrélation LOISIR}
 acf(mobw_loisirs_ts, main = "ACF – LOISIR (jours de semaine, hebdomadaire)")
 acf(mobWE_loisirs_ts,main = "ACF – LOISIR (week-end, hebdomadaire)")
 acf(mob_loisirs_ts,main = "ACF – LOISIR (série complète, hebdomadaire)")
 ```
-On observe toujours une chute très marquée début 2020 (premier confinement),suivie d’une reprise progressive à partir de 2021. La chute est plus brutale et plus profonde le week-end et plus lissée les jours ouvrables. Les niveaux pré-pandémiques ne sont pas totalement retrouvés. 
-Cela confirme que le secteur des loisirs a été durablement affecté par la crise sanitaire.
+
+On observe toujours une chute très marquée début 2020 (premier confinement),suivie d’une reprise progressive à partir de 2021. La chute est plus brutale et plus profonde le week-end et plus lissée les jours ouvrables. Les niveaux pré-pandémiques ne sont pas totalement retrouvés. Cela confirme que le secteur des loisirs a été durablement affecté par la crise sanitaire.
 
 ```{r tendance locale et générale de loisir}
 trend.test(mobw_loisirs_ts, R=999)->trend.test_w_loisir
@@ -140,9 +130,8 @@ local.trend(mobw_loisirs_ts,  main = "Tendance locale – LOISIR (jours ouvrable
 local.trend(mobWE_loisirs_ts, main = "Tendance locale – LOISIR (week-end)")->local.trend_WE_loisir
 local.trend(mob_loisirs_ts, main = "Tendance locale – LOISIR (hebdomadaire)")->local.trend_loisir
 ```
-L’analyse de la tendance locale met en évidence des changements au cours du temps. Une forte tendance négative est observée au début de la période étudiée, suivie d’un point bas autour de l’année 2021. Ensuite, une reprise progressive est visible, tant pour les jours ouvrables que pour les week-ends, bien que cette reprise soit plus marquée pour les activités de loisirs durant les week-ends.
-Donc durant le confinement les gens vont moins au centre commerciaux et font moins de loisir, ce qui coïncide avec le confinement et après lors des réouverture la tendance augmente les gens ressortent aux magasins.
-Les résultats du test de tendance générale basé sur bootstrap montrent que la statistique de test est significativement différente de zéro. La distribution bootstrap et le QQ-plot indiquent une bonne approximation par une loi normale, confirmant l’existence d’une tendance significative dans les séries de mobilité liées aux loisirs.
+
+L’analyse de la tendance locale met en évidence des changements au cours du temps. Une forte tendance négative est observée au début de la période étudiée, suivie d’un point bas autour de l’année 2021. Ensuite, une reprise progressive est visible, tant pour les jours ouvrables que pour les week-ends, bien que cette reprise soit plus marquée pour les activités de loisirs durant les week-ends. Donc durant le confinement les gens vont moins au centre commerciaux et font moins de loisir, ce qui coïncide avec le confinement et après lors des réouverture la tendance augmente les gens ressortent aux magasins. Les résultats du test de tendance générale basé sur bootstrap montrent que la statistique de test est significativement différente de zéro. La distribution bootstrap et le QQ-plot indiquent une bonne approximation par une loi normale, confirmant l’existence d’une tendance significative dans les séries de mobilité liées aux loisirs.
 
 ```{r loisir décomposition}
 mobw_mm_loisir <- tsd(mobw_loisirs_ts, method = "average", order = 5, times = 3)
@@ -154,13 +143,10 @@ plot(mob_mm_loisir)
 
 ```
 
-La décomposition par moyenne mobile permet de séparer la série de mobilité liée aux commerces et aux loisirs en une composante de tendance et une composante résiduelle.
-La composante filtrée met en évidence une tendance de long terme marquée par une chute brutale au début de l’année 2020, suivie d’une phase basse prolongée et d’une reprise progressive à partir de 2021. Cette évolution est observée de manière cohérente pour la série complète ainsi que pour les sous-séries jours ouvrables et week-end.
-Les résidus sont globalement centrés autour de zéro et correspondent principalement à des fluctuations de court terme et à des chocs ponctuels, indiquant que la décomposition capture correctement la dynamique principale de la série.
+La décomposition par moyenne mobile permet de séparer la série de mobilité liée aux commerces et aux loisirs en une composante de tendance et une composante résiduelle. La composante filtrée met en évidence une tendance de long terme marquée par une chute brutale au début de l’année 2020, suivie d’une phase basse prolongée et d’une reprise progressive à partir de 2021. Cette évolution est observée de manière cohérente pour la série complète ainsi que pour les sous-séries jours ouvrables et week-end. Les résidus sont globalement centrés autour de zéro et correspondent principalement à des fluctuations de court terme et à des chocs ponctuels, indiquant que la décomposition capture correctement la dynamique principale de la série.
 
-La décomposition par moyenne mobile permet de séparer la série de mobilité liée aux commerces et aux loisirs en une composante de tendance et une composante résiduelle.
-La composante filtrée met en évidence une tendance de long terme marquée par une chute brutale au début de l’année 2020, suivie d’une phase basse prolongée et d’une reprise progressive à partir de 2021. Cette évolution est observée de manière cohérente pour la série complète ainsi que pour les sous-séries jours ouvrables et week-end.
-Les résidus sont globalement centrés autour de zéro et correspondent principalement à des fluctuations de court terme et à des chocs ponctuels, indiquant que la décomposition capture correctement la dynamique principale de la série.
+La décomposition par moyenne mobile permet de séparer la série de mobilité liée aux commerces et aux loisirs en une composante de tendance et une composante résiduelle. La composante filtrée met en évidence une tendance de long terme marquée par une chute brutale au début de l’année 2020, suivie d’une phase basse prolongée et d’une reprise progressive à partir de 2021. Cette évolution est observée de manière cohérente pour la série complète ainsi que pour les sous-séries jours ouvrables et week-end. Les résidus sont globalement centrés autour de zéro et correspondent principalement à des fluctuations de court terme et à des chocs ponctuels, indiquant que la décomposition capture correctement la dynamique principale de la série.
+
 ```{r decomp_LOESS_loisir}
 loisir_loess <- tsd(mob_loisirs_ts, method   = "loess", s.window = 53, trend    = TRUE, robust   = TRUE)
 plot(loisir_loess, main = "Décomposition LOESS – LOISIR (hebdomadaire, série complète)")
@@ -171,11 +157,8 @@ plot(loisir_loess_w, main = "Décomposition LOESS – LOISIR (jours ouvrables)")
 loisir_loess_WE <- tsd(mobWE_loisirs_ts, method   = "loess", s.window = 53, trend    = TRUE, robust   = TRUE)
 plot(loisir_loess_WE, main = "Décomposition LOESS – LOISIR (Week-end)")
 ```
-La décomposition LOESS est privilégiée car elle capture correctement les tendances de long terme et les structures saisonnières sans imposer d’hypothèse linéaire stricte, tout en laissant des résidus faiblement structurés.
-La COVID-19 a provoqué une rupture majeure dans la mobilité liée aux loisirs,
-cet impact est visible à la fois sur la tendance de long terme et les variations à court terme,
-tandis que la structure saisonnière persiste, bien que temporairement perturbée.
-La décomposition LOESS est privilégiée car elle capture correctement les tendances de long terme et les structures saisonnières sans imposer d’hypothèse linéaire stricte, tout en laissant des résidus faiblement structurés.
+
+La décomposition LOESS est privilégiée car elle capture correctement les tendances de long terme et les structures saisonnières sans imposer d’hypothèse linéaire stricte, tout en laissant des résidus faiblement structurés. La COVID-19 a provoqué une rupture majeure dans la mobilité liée aux loisirs, cet impact est visible à la fois sur la tendance de long terme et les variations à court terme, tandis que la structure saisonnière persiste, bien que temporairement perturbée. La décomposition LOESS est privilégiée car elle capture correctement les tendances de long terme et les structures saisonnières sans imposer d’hypothèse linéaire stricte, tout en laissant des résidus faiblement structurés.
 
 ```{r extraction des résidus }
 mts_loisir <- tseries(loisir_loess)
@@ -188,38 +171,39 @@ tseries(loisir_loess_WE)->mts_loisir_WE
 plot(mts_loisir_WE)
 
 ```
-Les résidus sont très négatifs au début (dans les 3 cas), puis reviennent vers une zone plus stable.
-La saisonnalité est bien visible et assez régulière.
-La tendance monte puis forme un plateau vers la fin.
-Et donc les restriction du confinnement ont fait que les gens fréquentaient moins les commerces et leurs loisirs et petit à petit ils ont put  reprendre leusr activité normalement.
+
+Les résidus sont très négatifs au début (dans les 3 cas), puis reviennent vers une zone plus stable. La saisonnalité est bien visible et assez régulière. La tendance monte puis forme un plateau vers la fin. Et donc les restriction du confinnement ont fait que les gens fréquentaient moins les commerces et leurs loisirs et petit à petit ils ont put reprendre leusr activité normalement.
+
 ```{r loisir autocorelation}
 acf(mts_loisir[, "trend"])
 acf(mts_loisir_w[, "trend"])
 acf(mts_loisir_WE[, "trend"])
 ```
+
 L’autocorrélation élevée et persistante de la composante de tendance indique une forte dépendance temporelle, confirmant le caractère non stationnaire de la série, principalement induit par la rupture structurelle associée à la pandémie de COVID-19.
+
 ```{r spectrum}
 spectrum(mts_loisir[, "trend"], spans = c(5,7))
 spectrum(mts_loisir_w[, "trend"], spans = c(5,7))
 spectrum(mts_loisir_WE[, "trend"], spans = c(5,7))
 
 ```
-Le spectre est fortement concentré aux basses fréquences. Il n’y a pas de pic marqué à des fréquences élevées. La puissance spectrale décroît rapidement quand la fréquence augmente.
-Ce qui confirme que la tendance est dominée par des variations lentes, sans périodicité courte marquée.
-Il n’y a pas de cycle régulier hebdomadaire ou saisonnier dans la tendance ils ont été correctement séparés dans la composante seasonal lors de la décomposition LOESS.
+
+Le spectre est fortement concentré aux basses fréquences. Il n’y a pas de pic marqué à des fréquences élevées. La puissance spectrale décroît rapidement quand la fréquence augmente. Ce qui confirme que la tendance est dominée par des variations lentes, sans périodicité courte marquée. Il n’y a pas de cycle régulier hebdomadaire ou saisonnier dans la tendance ils ont été correctement séparés dans la composante seasonal lors de la décomposition LOESS.
+
 ```{r loisir autorrelation}
 acf(mts_loisir[, "residuals"])
 acf(mts_loisir_w[, "residuals"])
 acf(mts_loisir_WE[, "residuals"])
 
 ```
-Les résidus ne sont pas 100% bruit blanc il reste une dépendance à court terme 
-Ce qui est logique, parce que les mesures ne sont pas mise un seul jour, ça crée des épisodes de plusieurs jours/semaines donc autocorrélation.
+
+Les résidus ne sont pas 100% bruit blanc il reste une dépendance à court terme Ce qui est logique, parce que les mesures ne sont pas mise un seul jour, ça crée des épisodes de plusieurs jours/semaines donc autocorrélation.
 
 Je garde la décomposition LOESS car elle capture une tendance non linéaire et robuste aux ruptures (chocs COVID), tout en séparant proprement la saisonnalité et les anomalies résiduelles.
 
+##Mobilité lié au travail
 
-##Mobilité lié au travail 
 ```{r TRAVAIL}
 mobwts_travail <- ts(mobw$workplaces_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobwts_travail, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobw_travail_ts
@@ -236,7 +220,9 @@ acf(mobWE_travail_ts)
 ```
 
 ## Mobilité lié à la résidence
-### Présentation du jeu de données 
+
+### Présentation du jeu de données
+
 ```{r visualisation données résidence brutes}
 mob_ts_residence_brute <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 plot(mob_ts_residence_brute, main = "Résidence – semaines entières", xlab = "Temps", ylab = "% changement vs référence") #Visualisation données résidence pour semaine complètes
@@ -255,12 +241,13 @@ legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd 
 plot(mob$date, mob$residential_percent_change_from_baseline, type = "l", main = "Résidence – série temporelle avec séparation par années", ylab = "Variation (%) par rapport à la référence", xlab = "Date")
 abline(v = as.Date(c("2021-01-01", "2022-01-01")), col = "blue", lty = 2) # Lignes verticales aux changements d'année
 ```
-La variable Résidence représente la variation (en %) du temps passé à domicile par rapport à une période de référence. La série temporelle reprenant la semaine entière montre une hausse très marquée au début de l’année 2020, correspondant au premier confinement, avec des valeurs dépassant +30 %. 
-Par la suite, la série présente une diminution progressive, ponctuée de fluctuations, traduisant l’alternance des mesures sanitaires en 2020 et 2021. À partir de 2022, les variations deviennent plus faibles et se rapprochent de la référence (0%).
-La distinction entre jours ouvrables et week-ends met en évidence des comportements différents. Les jours ouvrables montrent des augmentations plus importantes et plus persistantes, probablement liées au télétravail, tandis que les week-ends montrent des variations plus modérées et un retour plus rapide vers les niveaux de référence.
+
+La variable Résidence représente la variation (en %) du temps passé à domicile par rapport à une période de référence. La série temporelle reprenant la semaine entière montre une hausse très marquée au début de l’année 2020, correspondant au premier confinement, avec des valeurs dépassant +30 %. Par la suite, la série présente une diminution progressive, ponctuée de fluctuations, traduisant l’alternance des mesures sanitaires en 2020 et 2021. À partir de 2022, les variations deviennent plus faibles et se rapprochent de la référence (0%). La distinction entre jours ouvrables et week-ends met en évidence des comportements différents. Les jours ouvrables montrent des augmentations plus importantes et plus persistantes, probablement liées au télétravail, tandis que les week-ends montrent des variations plus modérées et un retour plus rapide vers les niveaux de référence.
 
 ### Analyses
-#### Préparation des données 
+
+#### Préparation des données
+
 ```{r objet ts résidence}
 mobts_residence <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_residence_ts
@@ -278,21 +265,21 @@ plot(mobw_residence_ts, main = "Résidence – comparaison jours ouvrables / wee
 lines(mobWE_residence_ts, lwd = 2, lty = 2)
 legend("topright", legend = c("Jours ouvrables", "Week-end"), lty = c(1,2), lwd = 2, bty = "n")
 ```
-Les données de la variable résidence ont été converties en objets de type ts afin de permettre l’application des méthodes d’analyse des séries temporelles. Les séries sont définies à une fréquence journalière (frequency = 365) avec un point de départ fixé au 46ᵉ jour de l’année 2020.
-Trois séries ont été construites : une série incluant l’ensemble des jours, une série limitée aux jours ouvrables et une série limitée aux week-ends. 
+
+Les données de la variable résidence ont été converties en objets de type ts afin de permettre l’application des méthodes d’analyse des séries temporelles. Les séries sont définies à une fréquence journalière (frequency = 365) avec un point de départ fixé au 46ᵉ jour de l’année 2020. Trois séries ont été construites : une série incluant l’ensemble des jours, une série limitée aux jours ouvrables et une série limitée aux week-ends.
 
 #### Dépendance temporelle et autocorrélation
+
 ```{r Autocorrélation résidence}
 acf(mob_residence_ts, main = "ACF – Résidence (semaines complètes)")
 acf(mobw_residence_ts, main = "ACF – Résidence (jours ouvrables)")
 acf(mobWE_residence_ts, main = "ACF – Résidence (week-ends)")
 ```
-L’ACF calculée sur les semaines complètes confirme ces observations, avec une autocorrélation significative sur plusieurs retards, reflétant la dynamique globale de la variable Résidence.
-Pour les jours ouvrables, l’ACF montre des valeurs élevées aux petits retards, suivies d’une décroissance progressive. Cette structure indique une forte dépendance temporelle et suggère la présence d’une composante de long terme dans la série.
-La série correspondant aux week-ends présente un comportement similaire, avec une autocorrélation initiale élevée et une décroissance plus lente, traduisant également une persistance temporelle marquée.
-Dans l’ensemble, ces résultats indiquent que les observations successives ne sont pas indépendantes et que les séries ne peuvent être considérées comme stationnaires, ce qui justifie l’analyse des tendances et la décomposition des séries temporelles dans la suite du travail.
+
+L’ACF calculée sur les semaines complètes confirme ces observations, avec une autocorrélation significative sur plusieurs retards, reflétant la dynamique globale de la variable Résidence. Pour les jours ouvrables, l’ACF montre des valeurs élevées aux petits retards, suivies d’une décroissance progressive. Cette structure indique une forte dépendance temporelle et suggère la présence d’une composante de long terme dans la série. La série correspondant aux week-ends présente un comportement similaire, avec une autocorrélation initiale élevée et une décroissance plus lente, traduisant également une persistance temporelle marquée. Dans l’ensemble, ces résultats indiquent que les observations successives ne sont pas indépendantes et que les séries ne peuvent être considérées comme stationnaires, ce qui justifie l’analyse des tendances et la décomposition des séries temporelles dans la suite du travail.
 
 #### Analyses des tendances
+
 ```{r tendance générale et locale résidence}
 set.seed(123)
 tt_residence <- trend.test(mob_residence_ts, R = 999)
@@ -310,10 +297,11 @@ tt_residence_WE
 plot(tt_residence_WE)
 lt_residence_WE <- local.trend(mobWE_residence_ts, main="Test de tendance locale - résidence - week-ends") 
 ```
-Le test de tendance globale, appliqué aux 3 séries indique que l’hypothèse d’absence de tendance peut être rejetée. L’évolution observée ne peut donc pas être attribuée uniquement à des fluctuations aléatoires, ce qui confirme la présence d’une composante de long terme dans la série. Pour les semaines complètes et les jours ouvrables, une augmentation marquée est observée au début de l’année 2020, suivie d’un maintien à des niveaux élevés au cours de l’année 2021, puis d’une diminution progressive à partir de 2021–2022. 
-La série correspondant aux week-ends présente une évolution similaire, mais avec des amplitudes plus faibles, suggérant un impact moins durable sur les comportements résidentiels durant ces périodes.
 
-#### Décomposition de la série temporelle et extraction 
+Le test de tendance globale, appliqué aux 3 séries indique que l’hypothèse d’absence de tendance peut être rejetée. L’évolution observée ne peut donc pas être attribuée uniquement à des fluctuations aléatoires, ce qui confirme la présence d’une composante de long terme dans la série. Pour les semaines complètes et les jours ouvrables, une augmentation marquée est observée au début de l’année 2020, suivie d’un maintien à des niveaux élevés au cours de l’année 2021, puis d’une diminution progressive à partir de 2021–2022. La série correspondant aux week-ends présente une évolution similaire, mais avec des amplitudes plus faibles, suggérant un impact moins durable sur les comportements résidentiels durant ces périodes.
+
+#### Décomposition de la série temporelle et extraction
+
 ```{r décomposition résidence}
 mob_mm_residence <- tsd(mob_residence_ts, method = "average", order = 5, times = 3)
 plot(mob_mm_residence)
@@ -335,14 +323,12 @@ residencew_filtered <- extract(mobw_mm_residence, components = "filtered")
 acf(residencew_filtered, main = "ACF de la composante filtrée – Résidence (jours ouvrables)")
 
 ```
+
 La décomposition de la série temporelle de la variable Résidence a été réalisée afin d’isoler la dynamique de long terme et de séparer cette composante des fluctuations de court terme. Pour les semaines complètes, les jours ouvrables et les week-ends, les résultats montrent une dynamique globalement similaire : la série observée présente une hausse marquée au début de la période, suivie d’une décroissance progressive, ponctuée de quelques reprises intermédiaires.
 
 La composante filtrée, extraite par moyenne mobile, met clairement en évidence cette évolution de fond en réduisant la variabilité de court terme, ce qui facilite la lecture de la tendance générale et la comparaison entre périodes. Les résidus sont globalement centrés autour de zéro, mais présentent des valeurs extrêmes plus importantes au début de la période ainsi que lors de certains épisodes ponctuels, traduisant des variations temporaires non expliquées par la tendance lissée.
 
 La séparation selon le type de jour confirme que la dynamique de long terme est commune aux trois séries, tout en suggérant des amplitudes plus marquées pour les jours ouvrables et plus modérées pour les week-ends.
-
-
-
 
 ```{r TRANSPORT - Presentation de données sur les arrets de transport en époque de Covid}
 mob_ts_transport_brut <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
