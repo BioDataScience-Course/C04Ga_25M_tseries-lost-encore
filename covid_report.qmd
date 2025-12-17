@@ -204,6 +204,10 @@ Avec la décomposition, on ne voit quasiment aucune différence entre les jours 
 
 L’analyse de la mobilité liée aux commerces et aux loisirs met clairement en évidence l’impact majeur de la pandémie de COVID-19 sur les déplacements en Wallonie. La chute brutale observée au début de l’année 2020 correspond aux premières mesures de confinement, qui ont fortement limité les activités non essentielles.Les analyses temporelles montrent que cet impact ne se limite pas à une perturbation ponctuelle, mais qu’il s’inscrit dans une dynamique de long terme, comme en témoigne le caractère non stationnaire de la série. La reprise progressive observée à partir de 2021 suggère une adaptation graduelle des comportements de mobilité, sans retour immédiat aux niveaux pré-pandémiques.
 
+On voit des résultats similaires dans les arrêts de transport. Le premier confinement en 2020 a fortement diminué l'utilisation des transport. On voit que après le confinement, il y a eu une augmentation de l'utilisation de moyens de transport or cette utilisation reste très inférieure par rapport a celles que l'on peut voir les années suivantes, 2021 et 2022. Même si il y a un impact les années suivantes avec les confinement de début d'année, on voit que ça ne revient clairement pas a l'impact du premier confinement. Cependant on voit quand même encore que le cycle continue à se répéter jusqu'à 2022, mais cette fois-ci il n'y a vraiment quasiment plus d'impact.
+
 ### Conclusion :
 
 L’analyse de la mobilité liée aux commerces et aux loisirs met en évidence une rupture structurelle majeure à partir de 2020, suivie d’une reprise progressive mais incomplète des déplacements, ces résultats soulignent l’impact durable de la pandémie sur les comportements de mobilité, au-delà des périodes de confinement strict.
+
+On voit que le COVID influence également l'utilisation de moyens de transport. Or, il y a une reprise progressive de l'utilisation. Même s'il y a un impact pour chaque année, cela fini pas disparaître.
