@@ -454,6 +454,44 @@ acf(mts_transportDS[, "residuals"])
 acf(mts_transportFS[, "residuals"])  
 ```
 
+
+## Comparaison de l'impact des paramètres sur la mobilité
+```{r comparaison impact paramètres}
+mob_comp_week <- mob %>%
+  transmute(
+    date = as.Date(date),
+    Residence = residential_percent_change_from_baseline,
+    Loisirs   = retail_and_recreation_percent_change_from_baseline,
+    Travail   = workplaces_percent_change_from_baseline,
+    Transport = transit_stations_percent_change_from_baseline) %>%
+  mutate(week = as.Date(cut(date, "week", start.on.monday = TRUE))) %>%
+  group_by(week) %>%
+  summarise(
+    across(c(Residence, Loisirs, Travail, Transport),
+           ~ mean(.x, na.rm = TRUE)),
+    .groups = "drop") %>%
+  pivot_longer(
+    cols = c(Residence, Loisirs, Travail, Transport),
+    names_to = "parametre",
+    values_to = "variation")
+
+ggplot(mob_comp_week,
+       aes(x = week, y = variation,
+           color = parametre, linetype = parametre)) +
+  geom_line(linewidth = 0.8) +
+  geom_hline(yintercept = 0, linewidth = 0.4) +
+  labs(
+    title = "Comparaison des paramètres de mobilité (moyenne hebdomadaire)",
+    x = "Semaine",
+    y = "Variation (%) vs référence",
+    color = "Paramètre",
+    linetype = "Paramètre") +
+  scale_color_manual(values = c("Residence"="green", "Loisirs"="orange","Travail"="blue","Transport"="red"))+ theme_minimal()
+```
+La comparaison des séries met en évidence des réponses différentes pour les différents paramètres de mobilité choisis face à la pandémie de COVID-19. La variable résidence montre une augmentation marquée au début de l’année 2020, traduisant une forte augmentation du temps passé à domicile lors des périodes de confinement. À l’inverse, les variables loisirs, transport et travail montrent une diminution simultanée et importante, montrant la réduction des déplacements non essentiels, la baisse de l’utilisation des transports et la limitation des déplacements liés aux activités professionnelles, en raison du télétravail.
+
+L’amplitude des variations est particulièrement élevée en 2020 pour l’ensemble des paramètres, avec un impact maximal observé lors de la première vague de la pandémie. Par la suite, une récupération progressive est observée, plus rapide pour les loisirs, suggérant une reprise relativement précoce des activités sociales, tandis que le transport et le travail présentent un retour plus lent vers les niveaux de référence. La variable résidence diminue plus progressivement et reste au-dessus de la référence, indiquant une persistance des changements dans les habitudes quotidiennes. À partir de 2022, les quatre séries tendent à se rapprocher de la valeur de référence, tout en conservant des écarts, mettant en évidence l’existence d’effets durables de la pandémie sur les comportements de mobilité en Wallonie.
+
 ## Conclusion
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
