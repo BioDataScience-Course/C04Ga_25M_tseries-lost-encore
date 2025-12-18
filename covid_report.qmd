@@ -110,7 +110,7 @@ L’observation de la série suggère l’existence de structures temporelles pe
 Afin de mieux comprendre cette dynamique et de distinguer les différentes composantes de la série, une décomposition temporelle a été appliquée. La décomposition LOESS permet de séparer la série de mobilité en plusieurs composantes afin de mieux en comprendre la structure. La tendance met en évidence une chute brutale de la mobilité au début de l’année 2020, suivie d’une reprise progressive, reflétant l’impact durable de la pandémie de COVID-19. La composante saisonnière indique que certains comportements cycliques persistent malgré la crise sanitaire. Enfin, les résidus correspondent à des variations de court terme, liées à des événements ponctuels tels que l’introduction ou la levée de mesures sanitaires. L’utilisation de la méthode LOESS est particulièrement adaptée car elle permet de modéliser une tendance non linéaire et de capturer les ruptures induites par la pandémie.
 
 
-### Variable résidence
+### **Variable résidence**
 ```{r residence}
 mobts_residence <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_residence_ts
