@@ -188,26 +188,15 @@ On confirme ce que l'autre methode de décomposition montrais. De plus, on voit 
 On voit que les jours ouvrables il y a une augmentation plus rapide.
 
 ```{r extraction des résidus de Transport }
-mts_transport <- tseries(transport_loess) 
-
+mts_transport <- tseries(transport_loess)
+plot(mts_transport)
 mts_transportDS <- tseries(transportDS_loess) 
-plot(mts_transportDS) 
-
 mts_transportFS <- tseries(transportFS_loess) 
-plot(mts_transportFS)  
+
+spectrum(mts_transport[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (semaine)")
 ```
 
-On confirme bien ce même résultat avec l'extraction de résidus.
-
-```{r transport }
-acf(mts_transport[, "trend"], main ="Série mts TRANSPORT (semaine)") 
-
-spectrum(mts_transport[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (semaine)") 
-```
-
-On confirme bien ce même résultat avec l'extraction de résidus
-
-Avec la décomposition, on ne voit quasiment aucune différence entre les jours ouvrables et les jours de repos.
+On confirme bien ce même résultat avec l'extraction de résidus. Avec la décomposition, on ne voit quasiment aucune différence entre les jours ouvrables et les jours de repos.
 
 ### Comparaison de l'impact des paramètres sur la mobilité
 
