@@ -44,7 +44,7 @@ Dans le cadre de ce projet, une sauvegarde locale des données correspondant à 
 L’ensemble des analyses a été réalisé à l’aide du logiciel R (version 4.4.1, 2024-06-14), en s’appuyant sur les outils et packages présentés dans le cadre du cours Science des données biologiques 3.
 
 ### *Prétraitement des données*
- 
+
 Les données de mobilité étant initialement disponibles sous forme d’observations journalières, un prétraitement a été réalisé afin de structurer l’information temporelle et de faciliter l’analyse des dynamiques de moyen et long terme. Les dates ont été utilisées pour identifier les jours de la semaine, permettant de distinguer les jours ouvrables des week-ends. Afin d’analyser séparément ces deux contextes temporels, les valeurs correspondant aux jours non concernés ont été remplacées par des valeurs manquantes (NA), puis des séries temporelles distinctes ont été construites.
 
 Les séries journalières ont ensuite été agrégées à une échelle hebdomadaire par calcul de moyennes, dans le but de réduire la variabilité journalière et de mettre en évidence les tendances sous-jacentes. Les séries temporelles ont été formalisées à l’aide de la fonction ts, avec une fréquence correspondant à des observations journalières, puis adaptées à l’échelle hebdomadaire pour les analyses ultérieures.
@@ -103,14 +103,15 @@ plot(loisir_loess, main = "Décomposition LOESS – LOISIR (hebdomadaire, série
 ```
 
 #### Description
-Dans le but de caractériser l’évolution globale de la mobilité liée aux commerces et aux loisirs en Wallonie, la série temporelle a d’abord été agrégée à l’échelle hebdomadaire et représentée graphiquement. En l'analysant, on observe une chute brutale et marquée au début de l’année 2020, ce qui correspond à la mise en place du premier confinement. Cette baisse atteint des valeurs très négatives, illustrant une forte réduction des déplacements vers les lieux de loisirs et de consommation non essentielle. À partir de la seconde moitié de 2020 et surtout mi-2021, une reprise progressive de la mobilité est visible. Malgrès tout, les niveaux observés restent globalement inférieurs à la référence, indiquant un impact durable de la pandémie sur les comportements de déplacement. On observe vers fin 2022 un retour aux valeurs de référence pré-pandémique. Nous avons conservé ce graphique car il illuste la série temporelle tout en reduisant le bruit et en conservant les dynamique temporelles
 
-L’observation de la série suggère l’existence de structures temporelles persistantes. Afin de vérifier formellement la dépendance entre les observations successives et d’évaluer la stationnarité de la série, une analyse de l’autocorrélation a ensuite été réalisée. La fonction d’autocorrélation (ACF) met en évidence une forte corrélation positive pour les premiers retards, qui décroît lentement au fil des lags. Ce quo indique que les observations successives ne sont pas indépendantes et que la série présente une forte dépendance temporelle, caractéristique d’une série non stationnaire dominée par une tendance de long terme. La décroissance n'est pas rapide ce qui suggère que les variations observées sont liées à des phénomènes persistants dans le temps, tels que les mesures sanitaires prolongées. L’ACF est conservée car elle permet de justifier formellement l’utilisation de méthodes de décomposition car la série nécessite une séparation entre tendance, saisonnalité et résidus pour comprendre sa structure interne.
+Dans le but de caractériser l’évolution globale de la mobilité liée aux commerces et aux loisirs en Wallonie, la série temporelle a d’abord été agrégée à l’échelle hebdomadaire et représentée graphiquement. En l'analysant, on observe une chute brutale et marquée au début de l’année 2020, ce qui correspond à la mise en place du premier confinement. Cette baisse atteint des valeurs très négatives, illustrant une forte réduction des déplacements vers les lieux de loisirs et de consommation non essentielle. À partir de la seconde moitié de 2020 et surtout mi-2021, une reprise progressive de la mobilité est visible. Malgrès tout, les niveaux observés restent globalement inférieurs à la référence, indiquant un impact durable de la pandémie sur les comportements de déplacement. On observe vers fin 2022 un retour aux valeurs de référence pré-pandémique. Nous avons conservé ce graphique car il illuste la série temporelle tout en réduisant le bruit et en conservant les dynamique temporelles
 
-Afin de mieux comprendre cette dynamique et de distinguer les différentes composantes de la série, une décomposition temporelle a été appliquée. La décomposition LOESS permet de séparer la série de mobilité en plusieurs composantes afin de mieux en comprendre la structure. La tendance met en évidence une chute brutale de la mobilité au début de l’année 2020, suivie d’une reprise progressive, reflétant l’impact durable de la pandémie de COVID-19. La composante saisonnière indique que certains comportements cycliques persistent malgré la crise sanitaire. Enfin, les résidus correspondent à des variations de court terme, liées à des événements ponctuels tels que l’introduction ou la levée de mesures sanitaires. L’utilisation de la méthode LOESS est particulièrement adaptée car elle permet de modéliser une tendance non linéaire et de capturer les ruptures induites par la pandémie.
+L'observation de la série suggère l'existence de structures temporelles persistantes. Afin de vérifier formellement la dépendance entre les observations successives et d’évaluer la stationnarité de la série, une analyse de l'autocorrélation a ensuite été réalisée. La fonction d'autocorrélation (ACF) met en évidence une forte corrélation positive pour les premiers retards, qui décroît lentement au fil des lags. Ce quo indique que les observations successives ne sont pas indépendantes et que la série présente une forte dépendance temporelle, caractéristique d'une série non stationnaire dominée par une tendance de long terme. La décroissance n'est pas rapide ce qui suggère que les variations observées sont liées à des phénomènes persistants dans le temps, tels que les mesures sanitaires prolongées. L'ACF est conservée car elle permet de justifier formellement l'utilisation de méthodes de décomposition car la série nécessite une séparation entre tendance, saisonnalité et résidus pour comprendre sa structure interne.
 
+Afin de mieux comprendre cette dynamique et de distinguer les différentes composantes de la série, une décomposition temporelle a été appliquée. La décomposition LOESS permet de séparer la série de mobilité en plusieurs composantes afin de mieux en comprendre la structure. La tendance met en évidence une chute brutale de la mobilité au début de l'année 2020, suivie d’une reprise progressive, reflétant l'impact durable de la pandémie de COVID-19. La composante saisonnière indique que certains comportements cycliques persistent malgré la crise sanitaire. Enfin, les résidus correspondent à des variations de court terme, liées à des événements ponctuels tels que l'introduction ou la levée de mesures sanitaires. L'utilisation de la méthode LOESS est particulièrement adaptée car elle permet de modéliser une tendance non linéaire et de capturer les ruptures induites par la pandémie.
 
 ### **Variable résidence**
+
 ```{r residence}
 mobts_residence <- ts(mob$residential_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 aggregate(mobts_residence, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mob_residence_ts
@@ -133,17 +134,18 @@ plot(mob_mm_residence)
 residence_filtered <- extract(mob_mm_residence, components = "filtered")
 plot(residence_filtered, main = "Résidence – composante filtrée (moyenne mobile)", xlab = "Temps", ylab = "Variation (%) vs référence")
 ```
+
 #### Description
+
 La variable Résidence décrit la variation relative du temps passé à domicile par rapport à une période de référence pré-pandémique. L’analyse de la série temporelle agrégée à l’échelle hebdomadaire (en semaines complètes) présente des modifications majeures du comportement de mobilité en Wallonie au cours de la période étudiée (2020–2022).
 
 La série montre une augmentation très marquée du temps passé à domicile au début de l’année 2020, avec des valeurs atteignant plus de +25 %, ce qui correspond à la mise en place du premier confinement et aux restrictions strictes de déplacement. Cette phase initiale constitue la rupture la plus importante de toute la période étudiée. Par la suite, une diminution progressive est observée, marquée de reprises temporaires en 2020 et 2021, en lien avec l’alternance de phases de durcissement et d’assouplissement des mesures sanitaires. À partir de 2022, les variations deviennent plus faibles et se rapprochent progressivement des niveaux de référence, ce qui suggère un retour partiel vers des comportements de mobilité plus proches de la situation pré-pandémique.
 
-La comparaison entre jours ouvrables et week-ends montre une dynamique temporelle globalement similaire, mais avec des amplitudes distinctes. En effet, les augmentations du temps passé à domicile sont plus marquées durant les jours ouvrables, ce qui est cohérent avec le recours du télétravail et la réduction des déplacements professionnels. Les week-ends présentent des variations plus modérées et un retour plus rapide vers les niveaux de référence, traduisant une  contrainte moindre sur les déplacements non professionnels.
+La comparaison entre jours ouvrables et week-ends montre une dynamique temporelle globalement similaire, mais avec des amplitudes distinctes. En effet, les augmentations du temps passé à domicile sont plus marquées durant les jours ouvrables, ce qui est cohérent avec le recours du télétravail et la réduction des déplacements professionnels. Les week-ends présentent des variations plus modérées et un retour plus rapide vers les niveaux de référence, traduisant une contrainte moindre sur les déplacements non professionnels.
 
 Pour caractériser au mieux l’évolution de fond de la série, une décomposition par moyenne mobile a été appliquée à la série hebdomadaire principale. La composante filtrée met en évidence une tendance de long terme marquée par une décroissance progressive du temps passé à domicile sur l’ensemble de la période étudiée. Cette tendance reflète l’adaptation progressive des comportements après le choc initial de la pandémie, sans pour autant indiquer un retour immédiat et complet à la situation pré-COVID. Les fluctuations résiduelles, plus importantes au début de la période, traduisent des variations ponctuelles associées à des événements spécifiques ou à des changements rapides des mesures sanitaires.
 
 Dans l’ensemble, l’analyse de la variable Résidence montre que la pandémie de COVID-19 a entraîné une modification durable des comportements de mobilité en Wallonie, avec un impact particulièrement fort en 2020 et des effets persistants, bien que décroissants, au cours des années suivantes.
-
 
 ###Variable Transport
 
@@ -199,9 +201,6 @@ On confirme bien ce même résultat avec l'extraction de résidus.
 
 ```{r transport }
 acf(mts_transport[, "trend"], main ="Série mts TRANSPORT (semaine)") 
-acf(mts_transportDS[, "trend"], main ="Série mts TRANSPORT (début semaine)") 
-acf(mts_transportFS[, "trend"], main ="Série mts TRANSPORT (fin semaine)")  
-
 
 spectrum(mts_transport[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (semaine)") 
 ```
@@ -210,8 +209,8 @@ On confirme bien ce même résultat avec l'extraction de résidus
 
 Avec la décomposition, on ne voit quasiment aucune différence entre les jours ouvrables et les jours de repos.
 
-
 ### Comparaison de l'impact des paramètres sur la mobilité
+
 ```{r comparaison impact paramètres}
 mob_comp_week <- mob %>%
   transmute(
@@ -244,19 +243,18 @@ ggplot(mob_comp_week,
     linetype = "Paramètre") +
   scale_color_manual(values = c("Residence"="green", "Loisirs"="orange","Travail"="blue","Transport"="red"))+ theme_minimal()
 ```
-La comparaison des séries met en évidence des réponses différentes pour les différents paramètres de mobilité choisis face à la pandémie de COVID-19. La variable résidence montre une augmentation marquée au début de l’année 2020, traduisant une forte augmentation du temps passé à domicile lors des périodes de confinement. À l’inverse, les variables loisirs, transport et travail montrent une diminution simultanée et importante, montrant la réduction des déplacements non essentiels, la baisse de l’utilisation des transports et la limitation des déplacements liés aux activités professionnelles, en raison du télétravail.
 
-L’amplitude des variations est particulièrement élevée en 2020 pour l’ensemble des paramètres, avec un impact maximal observé lors de la première vague de la pandémie. Par la suite, une récupération progressive est observée, plus rapide pour les loisirs, suggérant une reprise relativement précoce des activités sociales, tandis que le transport et le travail présentent un retour plus lent vers les niveaux de référence. La variable résidence diminue plus progressivement et reste au-dessus de la référence, indiquant une persistance des changements dans les habitudes quotidiennes. À partir de 2022, les quatre séries tendent à se rapprocher de la valeur de référence, tout en conservant des écarts, mettant en évidence l’existence d’effets durables de la pandémie sur les comportements de mobilité en Wallonie.
+La comparaison des séries met en évidence des réponses différentes pour les différents paramètres de mobilité choisis face à la pandémie de COVID-19. La variable résidence montre une augmentation marquée au début de l'année 2020, traduisant une forte augmentation du temps passé à domicile lors des périodes de confinement. À l'inverse, les variables loisirs, transport et travail montrent une diminution simultanée et importante, montrant la réduction des déplacements non essentiels, la baisse de l'utilisation des transports et la limitation des déplacements liés aux activités professionnelles, en raison du télétravail.
 
-
+L’amplitude des variations est particulièrement élevée en 2020 pour l'ensemble des paramètres, avec un impact maximal observé lors de la première vague de la pandémie. Par la suite, une récupération progressive est observée, plus rapide pour les loisirs, suggérant une reprise relativement précoce des activités sociales, tandis que le transport et le travail présentent un retour plus lent vers les niveaux de référence. La variable résidence diminue plus progressivement et reste au-dessus de la référence, indiquant une persistance des changements dans les habitudes quotidiennes. À partir de 2022, les quatre séries tendent à se rapprocher de la valeur de référence, tout en conservant des écarts, mettant en évidence l'existence d’effets durables de la pandémie sur les comportements de mobilité en Wallonie.
 
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
 
-### Discussion 
+### Discussion
 
-L’analyse générale des variables résidence, loisirs, travail et transport met en évidence l’impact immédiat et marqué de la pandémie de COVID-19 sur la mobilité en Wallonie. Le début de l’année 2020 est caractérisé par une augmentation importante du temps passé à domicile, accompagnée d’une diminution simultanée des déplacements liés aux loisirs, au travail et aux transports, expliquant l’effet direct des mesures de confinement. 
+L’analyse générale des variables résidence, loisirs, travail et transport met en évidence l’impact immédiat et marqué de la pandémie de COVID-19 sur la mobilité en Wallonie. Le début de l’année 2020 est caractérisé par une augmentation importante du temps passé à domicile, accompagnée d’une diminution simultanée des déplacements liés aux loisirs, au travail et aux transports, expliquant l’effet direct des mesures de confinement.
 
 Au cours de 2020 et 2021, les séries temporelles indiquent une adaptation progressive des comportements, avec une reprise plus rapide des activités de loisirs par rapport aux déplacements professionnels et à l’utilisation des transports. La persistance de valeurs élevées pour la variable résidence suggère un effet durable du télétravail et des changements organisationnels sur la mobilité quotidienne.
 
@@ -264,10 +262,8 @@ On voit des résultats similaires dans les arrêts de transport. Le premier conf
 
 #Conclusion :
 
-
 L’analyse de la mobilité liée aux commerces et aux loisirs met en évidence une rupture structurelle majeure à partir de 2020, suivie d’une reprise progressive mais incomplète des déplacements, ces résultats soulignent l’impact durable de la pandémie sur les comportements de mobilité, au-delà des périodes de confinement strict.
 
-On voit que le COVID influence également l'utilisation de moyens de transport. Or, il y a une reprise progressive de l'utilisation. Même s'il y a un impact pour chaque année, cela fini pas disparaître.
-=======
-Les résultats de cette étude montrent que la pandémie de COVID-19 a profondément modifié les comportements de mobilité en Wallonie, avec des effets marqués sur l’ensemble des paramètres analysés. L’augmentation durable du temps passé à domicile, combinée à la diminution des déplacements liés aux loisirs, au travail et aux transports, met en évidence l’impact des restrictions sanitaires et des changements organisationnels, notamment le télétravail. Bien qu’un rapprochement progressif vers les niveaux de référence soit observé à partir de 2022, les comportements ne retrouvent pas immédiatement leur état pré-pandémique. Ces observations suggèrent que certaines adaptations induites par la crise sanitaire pourraient s’inscrire dans la durée et influencer durablement les pratiques de mobilité en Wallonie.
+# On voit que le COVID influence également l'utilisation de moyens de transport. Or, il y a une reprise progressive de l'utilisation. Même s'il y a un impact pour chaque année, cela fini pas disparaître.
 
+Les résultats de cette étude montrent que la pandémie de COVID-19 a profondément modifié les comportements de mobilité en Wallonie, avec des effets marqués sur l’ensemble des paramètres analysés. L’augmentation durable du temps passé à domicile, combinée à la diminution des déplacements liés aux loisirs, au travail et aux transports, met en évidence l’impact des restrictions sanitaires et des changements organisationnels, notamment le télétravail. Bien qu’un rapprochement progressif vers les niveaux de référence soit observé à partir de 2022, les comportements ne retrouvent pas immédiatement leur état pré-pandémique. Ces observations suggèrent que certaines adaptations induites par la crise sanitaire pourraient s’inscrire dans la durée et influencer durablement les pratiques de mobilité en Wallonie.
