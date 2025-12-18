@@ -44,7 +44,7 @@ Dans le cadre de ce projet, une sauvegarde locale des données correspondant à 
 L’ensemble des analyses a été réalisé à l’aide du logiciel R (version 4.4.1, 2024-06-14), en s’appuyant sur les outils et packages présentés dans le cadre du cours *Science des données biologiques 3*.
 
 ### *Prétraitement des données*
-
+ 
 Les données de mobilité étant initialement disponibles sous forme d’observations journalières, un prétraitement a été réalisé afin de structurer l’information temporelle et de faciliter l’analyse des dynamiques de moyen et long terme. Les dates ont été utilisées pour identifier les jours de la semaine, permettant de distinguer les jours ouvrables des week-ends. Afin d’analyser séparément ces deux contextes temporels, les valeurs correspondant aux jours non concernés ont été remplacées par des valeurs manquantes (NA), puis des séries temporelles distinctes ont été construites.
 
 Les séries journalières ont ensuite été agrégées à une échelle hebdomadaire par calcul de moyennes, dans le but de réduire la variabilité journalière et de mettre en évidence les tendances sous-jacentes. Les séries temporelles ont été formalisées à l’aide de la fonction ts, avec une fréquence correspondant à des observations journalières, puis adaptées à l’échelle hebdomadaire pour les analyses ultérieures.
