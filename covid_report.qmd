@@ -109,7 +109,6 @@ La fonction d’autocorrélation (ACF) met en évidence une forte corrélation p
  Afin de mieux comprendre cette dynamique et de distinguer les différentes composantes de la série, une décomposition temporelle a été appliquée.
 La décomposition LOESS permet de séparer la série de mobilité en plusieurs composantes afin de mieux en comprendre la structure. La tendance met en évidence une chute brutale de la mobilité au début de l’année 2020, suivie d’une reprise progressive, reflétant l’impact durable de la pandémie de COVID-19. La composante saisonnière indique que certains comportements cycliques persistent malgré la crise sanitaire. Enfin, les résidus correspondent à des variations de court terme, liées à des événements ponctuels tels que l’introduction ou la levée de mesures sanitaires. L’utilisation de la méthode LOESS est particulièrement adaptée car elle permet de modéliser une tendance non linéaire et de capturer les ruptures induites par la pandémie.
 
-
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
