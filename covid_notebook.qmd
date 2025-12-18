@@ -392,9 +392,9 @@ trend.test(mobFS_ts_transport,R=999)->trend.test_FS_transport
 plot(trend.test_FS_transport) 
 trend.test_FS_transport 
 
-local.trend(mob_ts_transport, main = "Tendance locale – TRANSPORT (jours ouvrables)")->local.trend_transport 
-local.trend(mobDS_ts_transport, main = "Tendance locale – TRANSPORT (week-end)")->local.trend_DS_transport 
-local.trend(mobFS_ts_transport, main = "Tendance locale – TRANSPORT (hebdomadaire)")->local.trend_FS_transport  
+local.trend(mob_ts_transport, main = "Tendance locale – TRANSPORT (tous les jours de la semaine)")->local.trend_transport 
+local.trend(mobDS_ts_transport, main = "Tendance locale – TRANSPORT (Début semaine)")->local.trend_DS_transport 
+local.trend(mobFS_ts_transport, main = "Tendance locale – TRANSPORT (Fin semaine)")->local.trend_FS_transport  
 
 ```
 
@@ -408,6 +408,7 @@ plot(mobDS_mm_transport)
 mobFS_mm_transport <- tsd(mobFS_ts_transport, method = "average", order = 5, times = 3) 
 plot(mobFS_mm_transport)  
 ```
+→ On voit bien que ça augmente le double de pourcentage pour l'année n+1 tout le temps.
 
 ```{r decomposition en LOESS des arrêts de transport}
 transport_loess <- tsd(mob_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
@@ -419,6 +420,8 @@ plot(transportDS_loess, main = "Décomposition LOESS de TRANSPORT (Debut de sema
 transportFS_loess <- tsd(mobFS_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
 plot(transportFS_loess, main = "Décomposition LOESS de TRANSPORT (Fin de semaine: samedi et dimanche)")  
 ```
+On voit qu'il y a une tendance générale à l'augmentation de la série. Il y a un cycle saisonnier dans lequel au début il y a une chute de -20% et ensuite ça se recupère dans un plateau, puis sa augmente vite de 40%, finalement, il y a une chute de -40% et une récupération de 20%
+
 
 ```{r extraction des résidus de Transport }
 mts_transport <- tseries(transport_loess) 
@@ -438,9 +441,9 @@ acf(mts_transportFS[, "trend"])
 ```
 
 ```{r}
-spectrum(mts_transport[, "trend"], spans = c(5,7)) 
-spectrum(mts_transportDS[, "trend"], spans = c(5,7)) 
-spectrum(mts_transportFS[, "trend"], spans = c(5,7))  
+spectrum(mts_transport[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (semaine)") 
+spectrum(mts_transportDS[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (début de semaine)") 
+spectrum(mts_transportFS[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (Fin de semaine)")  
 ```
 
 ```{r}
@@ -452,5 +455,11 @@ acf(mts_transportFS[, "residuals"])
 ## Conclusion
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
+<<<<<<< HEAD
 
+...vos conclusions ici...
+En général, on a une forte diminution au début puis une augmentation progressive qui se répète chaque année, mais pour chaque année il y a une augmentation du double par rapport à l'année précédente. Ceci pour le Travail, les Loisirs et le Transport, à exception de la Résidence ou c'est exactement l'inverse.
+=======
+Les activités de loisirs ont été plus fortement affectées durant les week-ends que les jours ouvrables, habituellement ce sont durant ces jours la que les gens préfère sortir, ce qui reflète l’effet des mesures sanitaires sur les déplacements non essentiels et on peu aussi observer une tendance significative de long terme, une saisonnalité persistante et des chocs ponctuels liés aux différentes phases de la crise sanitaire.
 Le paramètre Résidence montre une forte augmentation du temps passé à domicile au début de la pandémie de COVID-19, suivie d’une diminution progressive sans retour immédiat aux niveaux pré-pandémiques. Les analyses de séries temporelles indiquent que cette évolution correspond à une dynamique de long terme, avec un impact plus prononcé durant les jours ouvrables que durant les week-ends.
+>>>>>>> fc0939224006c77484052fe6c02ab44486d7d7e8
