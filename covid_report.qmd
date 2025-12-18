@@ -152,14 +152,10 @@ Dans l’ensemble, l’analyse de la variable Résidence montre que la pandémie
 ```{r transport - Presentation de données sur les arrets de transport en époque de Covid}
 mob_ts_transport_brut <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
 mob_ts_transport<-aggregate(mob_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
-
 mobDS_ts_transport_brut <- ts(mobWE$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
 mobDS_ts_transport<-aggregate(mobDS_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
-
 mobFS_ts_transport_brut <- ts(mob$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
 mobFS_ts_transport<-aggregate(mobFS_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
-
-acf(mob_ts_transport, main = "ACF – TRANSPORT (tous les jours de la semaine)")
 local.trend(mob_ts_transport, main = "Tendance locale – TRANSPORT (tous les jours de la semaine)")->local.trend_transport   
 ```
 
