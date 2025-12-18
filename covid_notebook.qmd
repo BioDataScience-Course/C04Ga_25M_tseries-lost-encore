@@ -26,7 +26,7 @@ Les données utilisées proviennent des Google COVID-19 Community Mobility Repor
 ## Matériel et méthodes
 
 <!--% Indiquez ici d'où viennent les données et aussi quel logiciel (et version) vous utilisez pour les analyses. Inspirez-vous des projets déjà réalisés. -->
-
+ 
 ### *Données de mobilité*
 
 Les données utilisées dans ce projet proviennent des rapports de mobilité communautaire publiés par Google pendant la pandémie de COVID-19. Ces données décrivent l’évolution relative de la fréquentation de différents types de lieux par rapport à une période de référence pré-pandémique, exprimée en pourcentage de variation. Les analyses ont été réalisées à l’aide du logiciel R (R version 4.4.1 (2024-06-14)), en utilisant les packages présentés dans le cadre du cours Science des données biologiques 3. Dans le cadre de ce travail, une sauvegarde locale des données wallonnes a été fournie sous la forme du fichier data/mobility_wallonia.rds. Les données couvrent la période de février 2020 à octobre 2022, correspondant aux phases les plus marquées de la pandémie et de la reprise progressive des activités. L’analyse se concentre principalement sur les années 2020 et 2021, qui sont les plus impactées par les mesures sanitaires.

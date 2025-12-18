@@ -236,7 +236,7 @@ Avec la décomposition, on ne voit quasiment aucune différence entre les jours 
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
 
-### Discussion
+### Discussion 
 
 L’analyse de la mobilité liée aux commerces et aux loisirs met clairement en évidence l’impact majeur de la pandémie de COVID-19 sur les déplacements en Wallonie. La chute brutale observée au début de l’année 2020 correspond aux premières mesures de confinement, qui ont fortement limité les activités non essentielles.Les analyses temporelles montrent que cet impact ne se limite pas à une perturbation ponctuelle, mais qu’il s’inscrit dans une dynamique de long terme, comme en témoigne le caractère non stationnaire de la série. La reprise progressive observée à partir de 2021 suggère une adaptation graduelle des comportements de mobilité, sans retour immédiat aux niveaux pré-pandémiques.
 
