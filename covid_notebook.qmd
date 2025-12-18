@@ -205,7 +205,7 @@ L’autocorrélation élevée et persistante de la composante de tendance indiqu
 
 ```{r spectrum}
 spectrum(mts_loisir[, "trend"], spans = c(5,7))
-spectrum(mts_loisir_w[, "trend"], spans = c(5,7))
+spectrum(mts_loisir_w[, "trend"], spans = c(5,7)) 
 spectrum(mts_loisir_WE[, "trend"], spans = c(5,7))
 
 ```
