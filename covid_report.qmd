@@ -147,7 +147,7 @@ Pour caractériser au mieux l’évolution de fond de la série, une décomposit
 
 Dans l’ensemble, l’analyse de la variable Résidence montre que la pandémie de COVID-19 a entraîné une modification durable des comportements de mobilité en Wallonie, avec un impact particulièrement fort en 2020 et des effets persistants, bien que décroissants, au cours des années suivantes.
 
-###Variable Transport
+### Variable Transport
 
 ```{r TRANSPORT - Presentation de données sur les arrets de transport en époque de Covid}
 mob_ts_transport_brut <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
@@ -163,8 +163,6 @@ acf(mob_ts_transport, main = "ACF – TRANSPORT (tous les jours de la semaine)")
 local.trend(mob_ts_transport, main = "Tendance locale – TRANSPORT (tous les jours de la semaine)")->local.trend_transport   
 ```
 
-On peut voir qu'au début du 2020 il y a une forte diminution, mais très peu après il y a une grande augmentation successive. En 2021, il y à nouveau une chute mais beaucoup moins drastique qu'avant (1/2 par rapport à l'année dernière). Ensuite, on voit une récupération encore plus forte qu'avant. Cependant, en 2022 il y a encore une autre chute de même intensité or qui dure beaucoup moins longtemps. Cette fois ci on perçoit une récupération complète de quasi 60% qui est maintenu dans le temps. Il n'y a pas de différence significative entre le weekend et les jours ouvrables.
-
 ```{r decomposition de données de arrêts de Transport}
 mob_mm_transport <- tsd(mob_ts_transport, method = "average", order = 5, times = 3) 
 plot(mob_mm_transport)
@@ -176,13 +174,15 @@ mts_transport <- tseries(transport_loess)
 plot(mts_transport)
 ```
 
+### Description
 
-On voit que même avec la décomposition des séries il n'y a as trop de différence entre weekend et jours ouvrables. → On voit bien que ça augmente le double de pourcentage pour l'année n+1 tout le temps.
+Grâce à la variable Transport, on peut étudier la fréquentation des arrêts de transport pendant l'époque des confinements en Wallonie à cause de la pandémie du Covid entre 2020 et 2022.
 
-On confirme ce que l'autre methode de décomposition montrais. De plus, on voit qu'il y a une tendance générale à l'augmentation de la série. Avec loess on voit plus clairement qu'il y a un cycle saisonnier dans lequel au début il y a une chute de -20% et ensuite ça se récupère dans un plateau, puis sa augmente vite de 40%, finalement, il y a une chute de -40% et une récupération de 20%.
+On peut voir qu'au début du 2020 il y a une forte diminution, et peu après une augmentation. En 2021, il y a nouveau une chute mais beaucoup moins drastique qu'avant (1/2 par rapport à l'année dernière). Ensuite, on voit une récupération encore plus forte qu'avant. Cependant, en 2022 il y a encore une autre chute de même intensité que celle de 2021 or elle dure beaucoup moins longtemps. Cette fois ci on perçoit une récupération complète de quasi 60% qui est maintenu dans le temps. Il n'y a pas de différence significative entre le weekend et les jours ouvrables.
 
-On voit que les jours ouvrables il y a une augmentation plus rapide.
-On confirme bien ce même résultat avec l'extraction de résidus. Avec la décomposition, on ne voit quasiment aucune différence entre les jours ouvrables et les jours de repos.
+On voit que même avec la décomposition des séries il n'y a as trop de différence entre weekend et jours ouvrables. On voit bien que ça augmente le double de pourcentage pour l'année n+1 tout le temps. On confirme ce que l'autre méthode de décomposition montrais. De plus, on voit qu'il y a une tendance générale à l'augmentation de la série. Avec loess on voit plus clairement qu'il y a un cycle saisonnier dans lequel au début il y a une chute de -20% et ensuite ça se récupère dans un plateau, puis sa augmente vite de 40%, finalement, il y a une chute de -40% et une récupération de 20%.
+
+On voit que les jours ouvrables il y a une augmentation plus rapide. On confirme bien ce même résultat avec l'extraction de résidus. Avec la décomposition, on confirme à nouveau qu'il n'y a quasiment aucune différence entre les jours ouvrables et les jours de repos.
 
 ### Comparaison de l'impact des paramètres sur la mobilité
 
