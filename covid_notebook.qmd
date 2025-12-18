@@ -359,7 +359,6 @@ La séparation selon le type de jour confirme que la dynamique de long terme est
 
 mob_ts_transport_brut<-ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
 mob_ts_transport<-aggregate(mob_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
-plot(mob_ts_transport, main="Arrets de transport par semaine",xlab="Temps", ylab="Pourcentage de changement par rapport à la référence") #pour la semaine complète 
 
 mobDS_ts_transport_brut<-ts(mobWE$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 mobDS_ts_transport<-aggregate(mobDS_ts_transport_brut, 52, FUN=collapse::fmean, ts.eps = 1/52) 
