@@ -436,7 +436,7 @@ mts_transportFS <- tseries(transportFS_loess)
 plot(mts_transportFS)  
 ```
 
-```{r}
+```{r }
 acf(mts_transport[, "trend"]) 
 acf(mts_transportDS[, "trend"]) 
 acf(mts_transportFS[, "trend"])  
