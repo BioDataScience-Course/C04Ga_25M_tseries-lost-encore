@@ -216,7 +216,7 @@ plot(mts_transportFS)
 
 On confirme bien ce même résultat avec l'extraction de résidus.
 
-```{r}
+```{r transport }
 acf(mts_transport[, "trend"], main ="Série mts TRANSPORT (semaine)") 
 acf(mts_transportDS[, "trend"], main ="Série mts TRANSPORT (début semaine)") 
 acf(mts_transportFS[, "trend"], main ="Série mts TRANSPORT (fin semaine)")  
