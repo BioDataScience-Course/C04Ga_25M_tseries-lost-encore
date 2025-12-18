@@ -226,21 +226,115 @@ Je garde la décomposition LOESS car elle capture une tendance non linéaire et 
 
 ## Mobilité lié au travail
 
+### Analyses et préparation des données
 
-```{r TRAVAIL}
-mobwts_travail <- ts(mobw$workplaces_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
-aggregate(mobwts_travail, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobw_travail_ts
-plot(mobw_travail_ts)
+```{r TRAVAIL - Visualistaion des données pour la variable travail}
+# Contient tous les jours de la semaines
+mob_ts_travail <- ts(mob$workplaces_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+mob_ts2_travail <- aggregate(mob_ts_travail, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(mob_ts2_travail, main = "Evolution de la fréquence des lieux de travail \npendant la pendémie de COVID-19 (2020-2022)", xlab = "Temps", ylab = "Variation de la mobilité par rapport \n au niveau de référence (%) - semaines complètes")
 
-mobWEts_travail <- ts(mobWE$workplaces_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
-aggregate(mobWEts_travail, 52, FUN = collapse::fmean, ts.eps = 1/52) ->mobWE_travail_ts
-plot(mobWE_travail_ts)
+# Contient que les jours ouvrables
+mobw_ts_travail <- ts(mobw$workplaces_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+mobw_ts2_travail <- aggregate(mobw_ts_travail, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(mobw_ts2_travail, main = "Evolution de la fréquence des lieux de travail \npendant la pendémie de COVID-19 (2020-2022)", xlab = "Temps", ylab = "Variation de la mobilité par rapport \n au niveau de référence (%) - uniquement les jours ouvrables")
+
+# Contient que le week-end
+mobWE_ts_travail <- ts(mobWE$workplaces_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+mobWE_ts2_travail <- aggregate(mobWE_ts_travail, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(mobWE_ts2_travail, main = "Evolution de la fréquence des lieux de travail \npendant la pendémie de COVID-19 (2020-2022)", xlab = "Temps", ylab = "Variation de la mobilité par rapport \n au niveau de référence (%) - uniquement les week-ends")
 ```
 
-```{r Autocorrélation TRAVAIL}
-acf(mobw_travail_ts)
-acf(mobWE_travail_ts)
+L’observation de la série temporelle globale (semaines complètes) révèle un effondrement immédiat au début de l’année 2020 avec une chute atteignant environ -60% m, marquant l'arrêt brutal des activités en présentiel lors du premier confinement.
+
+En fin d'années 2020 et pendant l'année 2021, la courbe remonte par paliers successifs mais reste instable. On observe des oscillations marquées qui reflètent les périodes de restrictions intermittentes et la mise en place du télé travail. A l’approche de 2022 la tendance se stabilise et se rapproche progressivement de la ligne de base (0%) bien que la fréquentation demeure globalement inférieure au niveau d’avant-crise.
+
+L’analyse selon le type de jours (ouvrables ou week-ends) permet de distinguer deux dynamiques : 
+
+La courbe des jours ouvrables est plus impactée. Les valeurs négatives sont plus grandes et persistent dans le temps. Cela illustre l’adoption massive du télétravail durant les jours de semaines.
+La variation est nettement moins extrême pendant les week-ends. Nous pouvons voir des périodes de valeurs positives (été 2020, courant 2021 et 2022). Cela suggère que l’activité professionnelle durant le week-end a retrouvé, voire dépassé à certains endroits, son niveau habituel de manière plus rapide comparé à l’activité en semaine.
+
+### Dépendance temporelle et autocorrélation pour la variable travail
+
+```{r Autocorrélation pour la variable travail}
+acf(mob_ts2_travail, main = "ACF – Lieu de travail (semaines complètes)")
+acf(mobw_ts2_travail, main = "ACF – Lieu de travail (jours ouvrables)")
+acf(mobWE_ts2_travail, main = "ACF – Lieu de travail (week-ends)")
 ```
+
+L’ACF calculée sur l’ensemble de la période (semaines complètes) ainsi que celle centrée sur les jours ouvrables révèlent des profils très proches. Nous pouvons y voire une décroissance lente et graduelle des coefficients d’autocorrélation, qui restent au-dessus du seuil de confiance (donc significatif). Nous remarquons également un léger rebond aux alentours de 0.3. Ceci pourrait suggérer qu’il y a un cycle à moyen terme dans les habitudes de travail.
+Pour la série des week-ends, l’autocorrélation initiale est également très élevée mais la décroissance semble plus linéaire jusqu’à ne plus être dans le seuil de confiance. Cela peut signifier que les comportements de mobilité durant les jours de repos ont tendance à rester stables d’un week-end à l’autre en évoluant lentement en fonction des changements des restrictions sanitaires.
+
+### Analyses des tendances générales
+
+```{r Tendance générale pour la variable travail}
+set.seed(66719)
+tt_travail <- trend.test(mob_ts2_travail, R = 999)
+plot(tt_residence, main="Test de tendance locale pour la variable travail (semaines entières)")
+
+set.seed(54989)
+tt_travail_w <- trend.test(mobw_ts2_travail, R = 999)
+plot(tt_travail_w, main="Test de tendance locale pour la variable travail (jours ouvrables)")
+
+set.seed(61658)
+tt_travail_WE <- trend.test(mobWE_ts2_travail, R = 999)
+plot(tt_travail_WE, main="Test de tendance locale pour la variable travail (week-ends)")
+```
+
+Nous pouvons voir que dans les trois cas, les résultats rejettent l'hypothèse nulle d'absence de tendance générale.
+
+Le l’histogramme de la série globale montre une valeur située à l’extrême gauche de la distribution avec une valeur négative (+/- 0.55). Cette valeur négative indique que sur la période 2020/20022 il y avait bien une diminution de la mobilité concernant le lieu de travail. Malgré une remontée en 2022, le poids des confinements et l’instauration du télétravail de manière durable font que la tendance reste marquée par cette diminution.
+
+Contrairement à la série globale, la série des jours ouvrables possède une valeur positive. La ligne en pointillé est située à l’extrême droite de l’histogramme loin de la distribution de référence. Il y a donc une tendance positive tout au long de la période après le premier confinement. Après le choc initial de 2020 (-60%), la fréquentation des bureaux à entamé une remontée progressive et constante.
+
+La statistique pour les week-ends est également positive et éloignée de la cloche du boostrap. Cette série montre une tendance de reprise plus nette. La mobilité durant les week-ends à retrouvé ses niveaux de base beaucoup plus rapidement que celles des jours ouvrables et elle est même parfois supérieure à la référence en 2022.
+
+En ce qui concerne les graphiques QQ-plot, pour les trois séries il y a une adéquation quasi parfaite entre la distribution des échantillons du boostrap et une distribution normale.
+
+```{r Décomposition pour la variable travail}
+mob_mm_travail <- tsd(mob_ts2_travail, method = "average", order = 5, times = 3)
+plot(mob_mm_travail)
+
+mobw_mm_travail <- tsd(mobw_ts2_travail, method = "average", order = 5, times = 3)
+plot(mobw_mm_travail)
+
+mobWE_mm_travail <- tsd(mobWE_ts2_travail, method = "average", order = 5, times = 3)
+plot(mobWE_mm_travail)
+```
+
+Pour la série globale, après l’effondrement en 2020, le retour au travail est progressif et marqué par des cycles. Ces cycles correspondent aux différentes vagues épidémique (nouveau variants) qui ont ralenti le retour au présentiel. Fin 2022, la tendance se stabilise mais elle n’est pas encore à son niveau pré-COVID (introduction du télé travail).
+Pour les jours ouvrables, la courbe est quasiment identique à la série globale signifiant que ce déficit impact surtout les jours ouvrables en raison du changement dans le mode de travail (télé travail).
+A l’inverse les week-ends retrouvent la « normale » dès 2021 donc plus rapidement que le travail en semaine.
+
+### Décomposition de la série temporelle et extraction pour la variable travail
+
+```{r Extraction de la composante filtrée pour la variable travail}
+mob_travail_filtered <- extract(mob_mm_travail, components = "filtered")
+plot(mob_travail_filtered,
+     main = "Travail (composante filtrée par moyenne mobile)",
+     xlab = "Temps", ylab = "Variation (%) vs référence")
+
+acf(mob_travail_filtered, main = "ACF de la composante filtrée – Travail (jours ouvrables)")
+
+mobw_travail_filtered <- extract(mobw_mm_travail, components = "filtered")
+plot(mobw_travail_filtered,
+     main = "Travail (composante filtrée par moyenne mobile)",
+     xlab = "Temps", ylab = "Variation (%) vs référence")
+
+acf(mobw_travail_filtered, main = "ACF de la composante filtrée – Travail (jours ouvrables)")
+
+mobWE_travail_filtered <- extract(mobWE_mm_travail, components = "filtered")
+plot(mobWE_travail_filtered,
+     main = "Travail (composante filtrée par moyenne mobile)",
+     xlab = "Temps", ylab = "Variation (%) vs référence")
+
+acf(mobWE_travail_filtered, main = "ACF de la composante filtrée – Travail (jours ouvrables)")
+```
+
+Pour la série globale, l'extraction de la composante filtrée met en évidence un cycle de récupération progressif mais qui varie. Après la chute du début de 2020, où la tendance lissée chute aux alentours de -40 %, on observe une remontée. Ce mouvement se stabilise à la fin de l'année 2022 autour de -10 % ce qui confirme que les déplacements liés au travail n'ont pas encore atteint le niveau avant la pandémie. L'autocorrélation associée à cette composante filtrée décroît de manière lente mais les barres restent significatives. Ces observations sont similaires pour la série des jours ouvrables.
+
+La composante filtrée des week-ends franchit la barre du 0 % dès le courant de l'année 2021 et atteint même des valeurs positives (environ +6 %) durant l'année 2022. Cette divergence s'explique par la nature des activités professionnelles de week-end. Cela peut être lié aux secteurs essentiels ou aux services physiques qui ne permettent pas le télétravail. Bien que l'ACF montre toujours une dépendance temporelle, la forme de la composante filtrée indique que la parenthèse de la pandémie est refermée pour cette catégorie, l'activité ayant retrouvé voire dépassé, son rythme de croisière initial.
+
 
 ## Mobilité lié à la résidence
 
