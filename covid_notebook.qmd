@@ -353,6 +353,8 @@ La composante filtrée, extraite par moyenne mobile, met clairement en évidence
 
 La séparation selon le type de jour confirme que la dynamique de long terme est commune aux trois séries, tout en suggérant des amplitudes plus marquées pour les jours ouvrables et plus modérées pour les week-ends.
 
+
+
 ```{r TRANSPORT - Presentation de données sur les arrets de transport en époque de Covid}
 mob_ts_transport_brut <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
 mob_ts_transport<-aggregate(mob_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
@@ -455,11 +457,9 @@ acf(mts_transportFS[, "residuals"])
 ## Conclusion
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
-<<<<<<< HEAD
-
-...vos conclusions ici...
-En général, on a une forte diminution au début puis une augmentation progressive qui se répète chaque année, mais pour chaque année il y a une augmentation du double par rapport à l'année précédente. Ceci pour le Travail, les Loisirs et le Transport, à exception de la Résidence ou c'est exactement l'inverse.
-=======
 Les activités de loisirs ont été plus fortement affectées durant les week-ends que les jours ouvrables, habituellement ce sont durant ces jours la que les gens préfère sortir, ce qui reflète l’effet des mesures sanitaires sur les déplacements non essentiels et on peu aussi observer une tendance significative de long terme, une saisonnalité persistante et des chocs ponctuels liés aux différentes phases de la crise sanitaire.
+
 Le paramètre Résidence montre une forte augmentation du temps passé à domicile au début de la pandémie de COVID-19, suivie d’une diminution progressive sans retour immédiat aux niveaux pré-pandémiques. Les analyses de séries temporelles indiquent que cette évolution correspond à une dynamique de long terme, avec un impact plus prononcé durant les jours ouvrables que durant les week-ends.
->>>>>>> fc0939224006c77484052fe6c02ab44486d7d7e8
+
+Pour le paramètre transport, on observe une forte chute des arrêts début 2020, suivie d’une reprise progressive mais irrégulière avec des fluctuations autour de la valeur de référence jusqu’en 2022.
+
