@@ -500,5 +500,5 @@ Les activités de loisirs ont été plus fortement affectées durant les week-en
 
 Le paramètre Résidence montre une forte augmentation du temps passé à domicile au début de la pandémie de COVID-19, suivie d’une diminution progressive sans retour immédiat aux niveaux pré-pandémiques. Les analyses de séries temporelles indiquent que cette évolution correspond à une dynamique de long terme, avec un impact plus prononcé durant les jours ouvrables que durant les week-ends.
 
-Pour le paramètre transport, on observe une forte chute des arrêts début 2020, suivie d’une reprise progressive mais irrégulière avec des fluctuations autour de la valeur de référence jusqu’en 2022.
+Pour le paramètre transport, on observe une forte chute début 2020 ce qui est traduit par la diminution de l'utilisation des moyen de transport dû aux mesusures sanitaires prise par le gouvrenement, ensuite il y a une reprise progressive mais irrégulière avec des fluctuations qui tend vers le valeur de référence pré-pandémique.
 
