@@ -145,8 +145,7 @@ Pour caractériser au mieux l’évolution de fond de la série, une décomposit
 Dans l’ensemble, l’analyse de la variable Résidence montre que la pandémie de COVID-19 a entraîné une modification durable des comportements de mobilité en Wallonie, avec un impact particulièrement fort en 2020 et des effets persistants, bien que décroissants, au cours des années suivantes.
 
 
-
-### **Variable Transport**
+###Variable Transport
 
 ```{r TRANSPORT - Presentation de données sur les arrets de transport en époque de Covid}
 mob_ts_transport_brut <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
@@ -188,18 +187,11 @@ On voit que les jours ouvrables il y a une augmentation plus rapide.
 
 ```{r extraction des résidus de Transport }
 mts_transport <- tseries(transport_loess) 
-<<<<<<< HEAD
-=======
-plot(mts_transport) 
->>>>>>> bbcb23378076b6969e6a894c1694651e2c1e8331
 
 mts_transportDS <- tseries(transportDS_loess) 
 plot(mts_transportDS) 
 
 mts_transportFS <- tseries(transportFS_loess) 
-<<<<<<< HEAD
-plot(mts_transportFS) 
-=======
 plot(mts_transportFS)  
 ```
 
@@ -209,7 +201,7 @@ On confirme bien ce même résultat avec l'extraction de résidus.
 acf(mts_transport[, "trend"], main ="Série mts TRANSPORT (semaine)") 
 acf(mts_transportDS[, "trend"], main ="Série mts TRANSPORT (début semaine)") 
 acf(mts_transportFS[, "trend"], main ="Série mts TRANSPORT (fin semaine)")  
->>>>>>> bbcb23378076b6969e6a894c1694651e2c1e8331
+
 
 spectrum(mts_transport[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (semaine)") 
 ```
@@ -270,12 +262,12 @@ Au cours de 2020 et 2021, les séries temporelles indiquent une adaptation progr
 
 On voit des résultats similaires dans les arrêts de transport. Le premier confinement en 2020 a fortement diminué l'utilisation des transport. On voit que après le confinement, il y a eu une augmentation de l'utilisation de moyens de transport or cette utilisation reste très inférieure par rapport a celles que l'on peut voir les années suivantes, 2021 et 2022. Même si il y a un impact les années suivantes avec les confinement de début d'année, on voit que ça ne revient clairement pas a l'impact du premier confinement. Cependant on voit quand même encore que le cycle continue à se répéter jusqu'à 2022, mais cette fois-ci il n'y a vraiment quasiment plus d'impact.
 
-### Conclusion :
-<<<<<<< HEAD
+#Conclusion :
+
 
 L’analyse de la mobilité liée aux commerces et aux loisirs met en évidence une rupture structurelle majeure à partir de 2020, suivie d’une reprise progressive mais incomplète des déplacements, ces résultats soulignent l’impact durable de la pandémie sur les comportements de mobilité, au-delà des périodes de confinement strict.
 
 On voit que le COVID influence également l'utilisation de moyens de transport. Or, il y a une reprise progressive de l'utilisation. Même s'il y a un impact pour chaque année, cela fini pas disparaître.
 =======
 Les résultats de cette étude montrent que la pandémie de COVID-19 a profondément modifié les comportements de mobilité en Wallonie, avec des effets marqués sur l’ensemble des paramètres analysés. L’augmentation durable du temps passé à domicile, combinée à la diminution des déplacements liés aux loisirs, au travail et aux transports, met en évidence l’impact des restrictions sanitaires et des changements organisationnels, notamment le télétravail. Bien qu’un rapprochement progressif vers les niveaux de référence soit observé à partir de 2022, les comportements ne retrouvent pas immédiatement leur état pré-pandémique. Ces observations suggèrent que certaines adaptations induites par la crise sanitaire pourraient s’inscrire dans la durée et influencer durablement les pratiques de mobilité en Wallonie.
->>>>>>> bbcb23378076b6969e6a894c1694651e2c1e8331
+
