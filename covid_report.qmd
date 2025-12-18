@@ -168,34 +168,26 @@ On peut voir qu'au début du 2020 il y a une forte diminution, mais très peu ap
 ```{r decomposition de données de arrêts de Transport}
 mob_mm_transport <- tsd(mob_ts_transport, method = "average", order = 5, times = 3) 
 plot(mob_mm_transport)
-
 mobDS_mm_transport <- tsd(mobDS_ts_transport, method = "average", order = 5, times = 3) 
-
 mobFS_mm_transport <- tsd(mobFS_ts_transport, method = "average", order = 5, times = 3) 
 
 transport_loess <- tsd(mob_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
 plot(transportFS_loess, main = "Décomposition LOESS de TRANSPORT (Fin de semaine: samedi et dimanche)") 
-
 transportDS_loess <- tsd(mobDS_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
-
 transportFS_loess<- tsd(mobFS_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
+
+mts_transport <- tseries(transport_loess)
+plot(mts_transport)
+mts_transportDS <- tseries(transportDS_loess) 
+mts_transportFS <- tseries(transportFS_loess)
 ```
+
 
 On voit que même avec la décomposition des séries il n'y a as trop de différence entre weekend et jours ouvrables. → On voit bien que ça augmente le double de pourcentage pour l'année n+1 tout le temps.
 
 On confirme ce que l'autre methode de décomposition montrais. De plus, on voit qu'il y a une tendance générale à l'augmentation de la série. Avec loess on voit plus clairement qu'il y a un cycle saisonnier dans lequel au début il y a une chute de -20% et ensuite ça se récupère dans un plateau, puis sa augmente vite de 40%, finalement, il y a une chute de -40% et une récupération de 20%.
 
 On voit que les jours ouvrables il y a une augmentation plus rapide.
-
-```{r extraction des résidus de Transport }
-mts_transport <- tseries(transport_loess)
-plot(mts_transport)
-mts_transportDS <- tseries(transportDS_loess) 
-mts_transportFS <- tseries(transportFS_loess) 
-
-spectrum(mts_transport[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (semaine)")
-```
-
 On confirme bien ce même résultat avec l'extraction de résidus. Avec la décomposition, on ne voit quasiment aucune différence entre les jours ouvrables et les jours de repos.
 
 ### Comparaison de l'impact des paramètres sur la mobilité
