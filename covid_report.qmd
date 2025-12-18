@@ -122,7 +122,6 @@ mobDS_ts_transport<-aggregate(mobDS_ts_transport_brut, 52, FUN = collapse::fmean
 mobFS_ts_transport_brut <- ts(mob$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
 mobFS_ts_transport<-aggregate(mobFS_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
 
-
 acf(mob_ts_transport, main = "ACF – TRANSPORT (tous les jours de la semaine)")
 local.trend(mob_ts_transport, main = "Tendance locale – TRANSPORT (tous les jours de la semaine)")->local.trend_transport   
 ```
@@ -142,8 +141,7 @@ plot(transportFS_loess, main = "Décomposition LOESS de TRANSPORT (Fin de semain
 
 transportDS_loess <- tsd(mobDS_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
 
-transportFS_loess <- tsd(mobFS_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
- 
+transportFS_loess<- tsd(mobFS_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
 ```
 
 On voit que même avec la décomposition des séries il n'y a as trop de différence entre weekend et jours ouvrables. → On voit bien que ça augmente le double de pourcentage pour l'année n+1 tout le temps.
@@ -161,11 +159,7 @@ plot(mts_transportDS)
 mts_transportFS <- tseries(transportFS_loess) 
 plot(mts_transportFS) 
 
-acf(mts_transport[, "trend"], main ="Série mts TRANSPORT (semaine)") 
-
 spectrum(mts_transport[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (semaine)") 
-
-acf(mts_transport[, "residuals"], main ="Autocorrelation TRANSPORT (semaine)") 
 ```
 
 On confirme bien ce même résultat avec l'extraction de résidus

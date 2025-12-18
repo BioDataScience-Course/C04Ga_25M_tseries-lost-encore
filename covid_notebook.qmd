@@ -354,22 +354,22 @@ La composante filtrée, extraite par moyenne mobile, met clairement en évidence
 La séparation selon le type de jour confirme que la dynamique de long terme est commune aux trois séries, tout en suggérant des amplitudes plus marquées pour les jours ouvrables et plus modérées pour les week-ends.
 
 ```{r TRANSPORT - Presentation de données sur les arrets de transport en époque de Covid}
-mob_ts_transport_brut <- ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
+
+mob_ts_transport_brut<-ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
 mob_ts_transport<-aggregate(mob_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
 plot(mob_ts_transport, main="Arrets de transport par semaine",xlab="Temps", ylab="Pourcentage de changement par rapport à la référence") #pour la semaine complète 
 
-mobDS_ts_transport_brut <- ts(mobWE$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
-mobDS_ts_transport<-aggregate(mobDS_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
+mobDS_ts_transport_brut<-ts(mobWE$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
+mobDS_ts_transport<-aggregate(mobDS_ts_transport_brut, 52, FUN=collapse::fmean, ts.eps = 1/52) 
 plot(mobDS_ts_transport, main = "Arrêts de transport en Début de Semaine", xlab = "Temps", ylab = "Pourcentage de changement par rapport à la référence")#pour le début de semaine de lundi à vendredi 
 
-mobFS_ts_transport_brut <- ts(mob$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
+mobFS_ts_transport_brut <- ts(mob$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 mobFS_ts_transport<-aggregate(mobFS_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
 plot(mobFS_ts_transport, main = "Arrêts de transport en Fin de Semaine", xlab = "Temps", ylab = "Pourcentage de changement par rapport à la référence")#pour la fin de la semaine pendant le samedi et le dimanche 
 
 plot(mob_ts_transport_brut, main = "Comparaison entre le Début de semaine et la Fin de la semaine", xlab = "Temps", ylab = "Pourcentage contre baseline", lwd = 2) 
 lines(mob_ts_transport_brut, lwd = 2, lty = 0.5) 
-legend("topright", legend = c("Début Semaine", "Fin Semaine"), lty = c(1,2), lwd = 2, bty = "n")#Superposition de début de semaine et fin de semaine  
-
+legend("topright", legend = c("Début Semaine", "Fin Semaine"), lty = c(1,2), lwd = 0.5, bty = "n")#Superposition de début de semaine et fin de semaine  
 ```
 
 On peut voir qu'au début du 2020 il y a une forte diminution, mais très peu après il y a une grande augmentation successive. En 2021, il y à nouveau une chute mais beaucoup moins drastique qu'avant (1/2 par rapport à l'année dernière). Ensuite, on voit une récupération encore plus forte qu'avant. Cependant, en 2022 il y a encore une autre chute de même intensité or qui dure beaucoup moins longtemps. Cette fois ci on perçoit une récupération complète de quasi 60% qui est maintenu dans le temps.
