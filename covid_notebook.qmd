@@ -359,7 +359,7 @@ La séparation selon le type de jour confirme que la dynamique de long terme est
 
 mob_ts_transport_brut<-ts(mobw$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365) 
 mob_ts_transport<-aggregate(mob_ts_transport_brut, 52, FUN = collapse::fmean, ts.eps = 1/52) 
-plot(mobDS_ts_transport, main = "Arrêts de transport par semaine", xlab = "Temps", ylab = "Pourcentage de changement par rapport à la référence")#pour toute la semaine 
+plot(mob_ts_transport, main = "Arrêts de transport par semaine", xlab = "Temps", ylab = "Pourcentage de changement par rapport à la référence")#pour toute la semaine 
 
 mobDS_ts_transport_brut<-ts(mobWE$transit_stations_percent_change_from_baseline, start = c(2020, 46), frequency = 365)
 mobDS_ts_transport<-aggregate(mobDS_ts_transport_brut, 52, FUN=collapse::fmean, ts.eps = 1/52) 
@@ -373,15 +373,16 @@ plot(mob_ts_transport_brut, main = "Comparaison entre le Début de semaine et la
 lines(mob_ts_transport_brut, lwd = 2, lty = 0.5) 
 legend("topright", legend = c("Début Semaine", "Fin Semaine"), lty = c(1,2), lwd = 0.5, bty = "n")#Superposition de début de semaine et fin de semaine  
 ```
-
-On peut voir qu'au début du 2020 il y a une forte diminution, mais très peu après il y a une grande augmentation successive. En 2021, il y à nouveau une chute mais beaucoup moins drastique qu'avant (1/2 par rapport à l'année dernière). Ensuite, on voit une récupération encore plus forte qu'avant. Cependant, en 2022 il y a encore une autre chute de même intensité or qui dure beaucoup moins longtemps. Cette fois ci on perçoit une récupération complète de quasi 60% qui est maintenu dans le temps.
+Les graphiques montrent l’évolution de la mobilité liée aux arrêts de transport en Wallonie, exprimée en pourcentage de variation par rapport à la période de référence. Une chute très marquée est observée au début de l’année 2020, correspondant à la mise en place du premier confinement et à la forte diminution de l’utilisation des transports publics.
+Par la suite, une reprise progressive est visible à partir de la seconde moitié de 2020, bien que ponctuée de nouvelles baisses lors des vagues successives de restrictions sanitaires en 2021 et début 2022. À partir de 2022, la mobilité se stabilise à des niveaux proches de la référence, suggérant un retour global des comportements de déplacement.
+La comparaison entre le début et la fin de semaine montre des dynamiques très similaires, sans différence structurelle marquée, indiquant que les mesures sanitaires ont affecté de manière comparable l’ensemble des déplacements liés aux transports, indépendamment du moment de la semaine.
 
 ```{r Autocorrélation TRANSPORT}
 acf(mob_ts_transport, main = "ACF – TRANSPORT (tous les jours de la semaine, hebdomadaire)") 
 acf(mobDS_ts_transport,main = "ACF – TRANSPORT (Début semaine, hebdomadaire)") 
 acf(mobFS_ts_transport,main = "ACF – TRANSPORT (Fin Semaine, hebdomadaire)")  
 ```
-
+L’analyse des fonctions d’autocorrélation (ACF), que ce soit en début de semaine, en fin de semaine ou sur l’ensemble des jours, met en évidence une forte dépendance temporelle aux faibles retards, suivie d’une décroissance progressive. Ce comportement indique que les observations successives ne sont pas indépendantes et que la série de mobilité liée aux transports est dominée par une tendance de long terme, justifiant le recours à des méthodes de décomposition temporelle.
 ```{r tendance locale et générale dans les arrêts de transport}
 trend.test(mob_ts_transport, R=999)->trend.test_S_transport 
 plot(trend.test_S_transport) 
@@ -400,7 +401,7 @@ local.trend(mobDS_ts_transport, main = "Tendance locale – TRANSPORT (Début se
 local.trend(mobFS_ts_transport, main = "Tendance locale – TRANSPORT (Fin semaine)")->local.trend_FS_transport  
 
 ```
-
+Les analyses de distribution, de normalité et de tendance locale appliquées à la mobilité liée aux transports mettent en évidence une structure temporelle marquée par une forte perturbation initiale suivie d’une reprise progressive. Les histogrammes et les graphiques quantile-quantile indiquent une distribution globalement symétrique, compatible avec l’hypothèse de normalité des résidus. Les tendances locales montrent une chute importante de la mobilité au début de l’année 2020, suivie d’une récupération graduelle jusqu’en 2022, avec des dynamiques très similaires quel que soit le découpage temporel considéré (ensemble de la semaine, début ou fin de semaine).
 ```{r décomposition de données de arrêts de Transport}
 mob_mm_transport <- tsd(mob_ts_transport, method = "average", order = 5, times = 3) 
 plot(mob_mm_transport) 
@@ -411,7 +412,7 @@ plot(mobDS_mm_transport)
 mobFS_mm_transport <- tsd(mobFS_ts_transport, method = "average", order = 5, times = 3) 
 plot(mobFS_mm_transport)  
 ```
- On voit bien que ça augmente le double de pourcentage pour l'année n+1 tout le temps.
+La moyenne mobile met en évidence une tendance de long terme marquée par une chute initiale suivie d’une reprise progressive, les résidus correspondant à des variations de court terme autour de cette dynamique.
 
 ```{r decomposition en LOESS des arrêts de transport}
 transport_loess <- tsd(mob_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
@@ -423,7 +424,7 @@ plot(transportDS_loess, main = "Décomposition LOESS de TRANSPORT (Debut de sema
 transportFS_loess <- tsd(mobFS_ts_transport, method = "loess", s.window = 53, trend = TRUE, robust = TRUE) 
 plot(transportFS_loess, main = "Décomposition LOESS de TRANSPORT (Fin de semaine: samedi et dimanche)")  
 ```
-On voit qu'il y a une tendance générale à l'augmentation de la série. Il y a un cycle saisonnier dans lequel au début il y a une chute de -20% et ensuite ça se recupère dans un plateau, puis sa augmente vite de 40%, finalement, il y a une chute de -40% et une récupération de 20%
+La série de mobilité liée aux transports présente une forte autocorrélation et une tendance non stationnaire, marquée par une chute brutale en 2020 suivie d’une reprise progressive. La décomposition montre que la dynamique est principalement gouvernée par la tendance de long terme, tandis que les fluctuations résiduelles restent limitées.
 
 ```{r extraction des résidus de Transport }
 mts_transport <- tseries(transport_loess) 
@@ -435,25 +436,33 @@ plot(mts_transportDS)
 mts_transportFS <- tseries(transportFS_loess) 
 plot(mts_transportFS)  
 ```
-
+L’analyse de la mobilité liée aux transports met en évidence une forte dépendance temporelle, traduisant une dynamique persistante des déplacements au cours du temps. La série présente une rupture marquée au début de l’année 2020, suivie d’une reprise progressive, indiquant un impact durable de la pandémie sur l’utilisation des transports.
+La décomposition temporelle permet de distinguer une tendance de long terme, globalement croissante après la phase de confinement, ainsi qu’une composante saisonnière régulière reflétant des comportements cycliques récurrents. Les résidus correspondent principalement à des variations de court terme, liées à des fluctuations ponctuelles.
+Ces résultats confirment que la mobilité liée aux transports est structurée par des effets à la fois durables et cycliques, justifiant l’utilisation de méthodes de décomposition pour en comprendre la dynamique globale.
 ```{r acf trnd transport }
 acf(mts_transport[, "trend"]) 
 acf(mts_transportDS[, "trend"]) 
 acf(mts_transportFS[, "trend"])  
 ```
+L’analyse de la série temporelle de la mobilité liée aux transports met en évidence une forte dépendance temporelle, comme le montre la fonction d’autocorrélation, avec des corrélations élevées pour les premiers retards qui décroissent lentement. Cela indique que les observations successives ne sont pas indépendantes et que la série est dominée par une tendance de long terme.
+La décomposition temporelle permet de mieux comprendre cette structure. La tendance met en évidence une baisse marquée au début de la période, suivie d’une reprise progressive et durable, traduisant l’impact prolongé de la pandémie sur les déplacements liés aux transports. Une composante saisonnière est également observable, suggérant la persistance de comportements cycliques dans le temps. Enfin, les résidus correspondent à des fluctuations de court terme, liées à des événements ponctuels ou à des variations non expliquées par la tendance et la saisonnalité.
+Globalement, ces résultats confirment que la mobilité liée aux transports a été fortement affectée par la crise sanitaire, avec une dynamique non stationnaire et une récupération progressive au cours du temps.
 
 ```{r spectrum transport}
-spectrum(mts_transport[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (semaine)") 
-spectrum(mts_transportDS[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (début de semaine)") 
-spectrum(mts_transportFS[, "trend"], spans = c(5,7), main = "Décomposition LOESS de TRANSPORT (Fin de semaine)")  
+spectrum(mts_transport[, "trend"], spans = c(5,7), main = "Spectrum de TRANSPORT (semaine)") 
+spectrum(mts_transportDS[, "trend"], spans = c(5,7), main = "Spectrum LOESS de TRANSPORT (début de semaine)") 
+spectrum(mts_transportFS[, "trend"], spans = c(5,7), main = "Spectrum LOESS de TRANSPORT (Fin de semaine)")  
 ```
-
+De manière générale, la série de mobilité liée aux transports montre une forte perturbation au début de l’année 2020, correspondant à la mise en place des premières mesures sanitaires. Cette chute est suivie d’une reprise progressive au cours des années suivantes.
+La décomposition LOESS met en évidence une tendance de fond croissante, traduisant une récupération graduelle des déplacements, ainsi qu’une composante saisonnière régulière, indiquant la persistance de comportements cycliques malgré la pandémie. Les résidus restent globalement limités, suggérant que la structure principale de la série est bien capturée par le modèle.
 ```{r acf transport}
 acf(mts_transport[, "residuals"]) 
 acf(mts_transportDS[, "residuals"]) 
 acf(mts_transportFS[, "residuals"])  
 ```
-
+La série temporelle de la mobilité liée aux transports met en évidence une forte perturbation à partir du début de l’année 2020, correspondant à la mise en place des mesures sanitaires liées à la pandémie de COVID-19. Cette période est marquée par une chute importante de la mobilité, suivie d’une reprise progressive au cours des années suivantes.
+L’analyse de l’autocorrélation montre une dépendance temporelle marquée entre les observations, indiquant que la série n’est pas stationnaire et qu’elle est dominée par une tendance de long terme.
+La décomposition LOESS permet de distinguer clairement cette tendance globale, une composante saisonnière persistante ainsi que des résidus de plus faible amplitude, associés à des variations ponctuelles. L’ensemble de ces résultats souligne l’impact durable de la pandémie sur les déplacements liés aux transports en Wallonie.
 ## Comparaison de l'impact des paramètres sur la mobilité
 ```{r comparaison impact paramètres}
 mob_comp_week <- mob %>%
