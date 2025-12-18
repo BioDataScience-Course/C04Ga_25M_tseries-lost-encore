@@ -452,7 +452,7 @@ spectrum(mts_transportFS[, "trend"], spans = c(5,7), main = "Décomposition LOES
 acf(mts_transport[, "residuals"]) 
 acf(mts_transportDS[, "residuals"]) 
 acf(mts_transportFS[, "residuals"])  
-``
+```
 
 ## Comparaison de l'impact des paramètres sur la mobilité
 ```{r comparaison impact paramètres}
